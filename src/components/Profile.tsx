@@ -1,9 +1,11 @@
 import { CgProfile } from 'react-icons/cg'
+import { AiOutlineShoppingCart } from 'react-icons/ai'
 
 const Profile = () => {
   return (
-    <button className='rounded-full p-1 bg-transparent text-black absolute right-0 sm:right-10'>
-      <CgProfile className='text-4xl' />
+    <button className='rounded-full p-1 absolute bg-transparent text-black right-0 sm:right-6 flex gap-4'>
+      <AiOutlineShoppingCart className='text-3xl' />
+      <CgProfile className='text-3xl' />
     </button>
   )
 }

@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 const Tab = () => {
   const [isTabContentOpen, setIsTabContentOpen] = useState(false)
 
+  // closing the tabs when clicking outside
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       const target = e.target as Element
@@ -46,7 +47,9 @@ const Tab = () => {
           <Login />
         </TabsContent>
       )}
-      <Profile />
+      <div className='flex items-center'>
+        <Profile />
+      </div>
     </Tabs>
   )
 }
@@ -56,7 +59,7 @@ export const Register = ({ on }: { on?: string }) => {
   return (
     <Card
       className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72 top-72 ' : 'right-20 top-16'
+        on === 'mobile' ? 'w-72 sm:w-96 top-72' : 'right-20 top-16'
       } `}
     >
       <CardHeader>
@@ -92,7 +95,7 @@ export const Login = ({ on }: { on?: string }) => {
   return (
     <Card
       className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72 top-72 ' : 'right-20 top-16'
+        on === 'mobile' ? 'w-72  sm:w-96 top-72 ' : 'right-20 top-16'
       } `}
     >
       <CardHeader>

@@ -52,6 +52,7 @@ const DropDown = ({
             >
               Login
             </DropdownMenuLabel>
+            <DropdownMenuLabel className='text-2xl'>Cart</DropdownMenuLabel>
             {currentOpen === 'register' && <Register on='mobile' />}
             {currentOpen === 'login' && <Login on='mobile' />}
           </DropdownMenuContent>
