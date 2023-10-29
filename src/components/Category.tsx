@@ -1,4 +1,8 @@
 const Category = () => {
-  return <div>Category</div>
+  return (
+    <section>
+      <h2>Shop by category</h2>
+    </section>
+  )
 }
 export default Category

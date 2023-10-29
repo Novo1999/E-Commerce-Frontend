@@ -4,7 +4,16 @@ import { buttonVariants } from '@/components/ui/button'
 const Navlinks = () => {
   return (
     <div className='flex gap-4'>
-      <NavLink className={buttonVariants({ variant: 'ghost' })} to='/'>
+      <NavLink
+        className={({ isActive }) =>
+          isActive
+            ? `${buttonVariants({
+                variant: 'ghost',
+              })} bg-slate-400 text-white`
+            : buttonVariants({ variant: 'ghost' })
+        }
+        to='/all-products'
+      >
         All Products
       </NavLink>
       <NavLink className={buttonVariants({ variant: 'ghost' })} to='/'>

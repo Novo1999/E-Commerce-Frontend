@@ -1,8 +1,7 @@
-import { About, Category, Contact, Hero, Navbar } from '../components'
+import { About, Category, Contact, Hero } from '../components'
 const HomeLayout = () => {
   return (
     <main>
-      <Navbar />
       <Hero />
       <Category />
       <Contact />
