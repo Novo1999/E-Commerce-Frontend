@@ -1,13 +1,16 @@
 import { Toaster } from 'react-hot-toast'
 import { Outlet, useNavigation } from 'react-router'
 import { Navbar } from './components'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
+const queryClient = new QueryClient()
 const App = () => {
   const navigation = useNavigation()
   const isLoading = navigation.state === 'loading'
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Toaster />
       <Navbar />
       {isLoading ? (
@@ -15,7 +18,8 @@ const App = () => {
       ) : (
         <Outlet />
       )}
-    </>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 export default App
