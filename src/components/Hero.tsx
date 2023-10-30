@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 
 const Hero = () => {
@@ -19,7 +18,7 @@ const Hero = () => {
           </h1>
         </div>
         <img
-          src='../../public/assets/hero-1.jpg'
+          src='/assets/hero-1.jpg'
           alt='hero-img'
           className='w-full xl:object-cover xl:h-[60rem]'
         />
@@ -46,7 +45,7 @@ const Hero = () => {
           </h1>
         </div>
         <img
-          src='../../public/assets/hero-2.jpg'
+          src='/assets/hero-2.jpg'
           alt='hero-img'
           className='w-full xl:object-cover xl:h-[60rem]'
         />
@@ -73,7 +72,7 @@ const Hero = () => {
           </h1>
         </div>
         <img
-          src='../../public/assets/hero-3.jpg'
+          src='/assets/hero-3.jpg'
           alt='hero-img'
           className='w-full xl:h-[60rem] xl:object-cover'
         />
