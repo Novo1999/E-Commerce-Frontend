@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
   return (
@@ -6,9 +7,13 @@ const Hero = () => {
       {/* IMG 1 */}
       <div id='slide1' className='carousel-item relative w-full'>
         <div className='absolute bottom-3 right-4 font-cuprum text-2xl z-10 text-white flex lg:bottom-24 xl:bottom-[10rem] xl:text-7xl flex-col sm:text-6xl'>
-          <Button className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'>
+          <Link
+            className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl text-sm p-3 sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'
+            to='/all-products'
+          >
             Shop Now
-          </Button>
+          </Link>
+
           <h1>
             Your Go To <span className='text-red-500'>Gym</span> Store
           </h1>
@@ -30,9 +35,12 @@ const Hero = () => {
       {/* IMG 2 */}
       <div id='slide2' className='carousel-item relative w-full'>
         <div className='absolute bottom-3 right-4 font-cuprum text-2xl text-white flex lg:bottom-24 xl:bottom-[10rem] xl:text-7xl flex-col sm:text-6xl'>
-          <Button className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'>
+          <Link
+            className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl text-sm p-3 sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'
+            to='/all-products'
+          >
             Shop Now
-          </Button>
+          </Link>
           <h1>
             Delivering <span className='text-red-500'>Everlasting</span> Quality
           </h1>
@@ -54,9 +62,12 @@ const Hero = () => {
       {/* IMG 3 */}
       <div id='slide3' className='carousel-item relative w-full'>
         <div className='absolute bottom-3 right-4 font-cuprum text-2xl text-white flex lg:bottom-24 drop-shadow-xl xl:bottom-[8rem] xl:text-7xl flex-col sm:text-6xl'>
-          <Button className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'>
+          <Link
+            className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl text-sm p-3 sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'
+            to='/all-products'
+          >
             Shop Now
-          </Button>
+          </Link>
           <h1>
             A all in <span className='text-red-500'>one</span> center
           </h1>

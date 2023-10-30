@@ -12,6 +12,18 @@ const Navlinks = () => {
               })} bg-slate-400 text-white`
             : buttonVariants({ variant: 'ghost' })
         }
+        to='/'
+      >
+        Home
+      </NavLink>
+      <NavLink
+        className={({ isActive }) =>
+          isActive
+            ? `${buttonVariants({
+                variant: 'ghost',
+              })} bg-slate-400 text-white`
+            : buttonVariants({ variant: 'ghost' })
+        }
         to='/all-products'
       >
         All Products

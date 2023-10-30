@@ -1,6 +1,5 @@
 import { useGetAllProducts } from '@/hooks/useGetAllProducts'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
-
 interface Product {
   _id: string
   name: string
@@ -24,9 +23,12 @@ const AllProducts = () => {
             className='card shadow-xl border-2 sm:p-4 sm:gap-2 border-black'
             key={id}
           >
-            <figure className='p-2 h-full'>
+            <div
+              className='p-4 h-full cursor-pointer tooltip tooltip-info flex justify-center items-center'
+              data-tip='View details'
+            >
               <img src={link} alt='Shoes' />
-            </figure>
+            </div>
             <div className='card-body'>
               <h2 className='card-title text-lg sm:text-lg'>{name}</h2>
               <p className='text-sm sm:text-lg'>By {brand}</p>
