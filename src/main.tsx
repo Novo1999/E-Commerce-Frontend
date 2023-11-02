@@ -6,6 +6,7 @@ import ErrorPage from './pages/Error.tsx'
 import App from './App.tsx'
 import AllProducts from './pages/AllProducts.tsx'
 import HomeLayout from './pages/HomeLayout.tsx'
+import SingleProduct from './pages/SingleProduct.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,10 +17,15 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <HomeLayout />,
+        index: true,
       },
       {
         path: 'all-products',
         element: <AllProducts />,
+      },
+      {
+        path: '/products/product/:id',
+        element: <SingleProduct />,
       },
     ],
   },
