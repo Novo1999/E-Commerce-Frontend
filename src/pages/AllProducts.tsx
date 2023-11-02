@@ -8,9 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Spinner } from '@/components'
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 
 interface Product {
   _id: string
@@ -31,6 +31,16 @@ const AllProducts = () => {
   const totalPages = Math.ceil(totalData?.data.length / limit)
   const currentPage = (skip + limit) / 10
   const { data, isLoading } = useGetAllProducts(sortBy, skip, limit)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const page = searchParams.get('page')
+
+    setSkip((Number(page) - 1) * 10)
+
+    if (data?.data.length === 0) throw new Error('No available products')
+  }, [currentPage, setSearchParams, searchParams, skip, data])
 
   const handlePagination = (e: MouseEvent) => {
     const target = e.target as HTMLButtonElement
@@ -128,36 +138,57 @@ const AllProducts = () => {
       </div>
       <div
         onClick={(e) => {
-          console.log(e.target.value)
+          // console.log(e.target.value)
           handlePagination(e)
         }}
         className='join'
       >
         {currentPage > 1 && (
-          <button
-            value={(currentPage - 2) * limit}
-            className='join-item btn btn-md'
+          <Link
+            to={{
+              pathname: '/all-products',
+              search: `?page=${currentPage - 1}`,
+            }}
           >
-            {'<'}
-          </button>
+            <button
+              value={(currentPage - 2) * limit}
+              className='join-item btn btn-md'
+            >
+              {'<'}
+            </button>
+          </Link>
         )}
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <button
+          <Link
             key={pageNum}
-            value={(pageNum - 1) * limit}
-            className={`join-item btn btn-md ${
-              pageNum === currentPage
-                ? 'btn-active bg-red-500 text-black hover:bg-red-500'
-                : ''
-            }`}
+            to={{ pathname: '/all-products', search: `?page=${pageNum}` }}
           >
-            {pageNum}
-          </button>
+            <button
+              value={(pageNum - 1) * limit}
+              className={`join-item btn btn-md ${
+                pageNum === currentPage
+                  ? 'btn-active bg-red-500 text-black hover:bg-red-500'
+                  : ''
+              }`}
+            >
+              {pageNum}
+            </button>
+          </Link>
         ))}
         {currentPage < totalPages && (
-          <button value={currentPage * limit} className='join-item btn btn-md'>
-            {'>'}
-          </button>
+          <Link
+            to={{
+              pathname: '/all-products',
+              search: `?page=${currentPage + 1}`,
+            }}
+          >
+            <button
+              value={currentPage * limit}
+              className='join-item btn btn-md'
+            >
+              {'>'}
+            </button>
+          </Link>
         )}
       </div>
     </div>
