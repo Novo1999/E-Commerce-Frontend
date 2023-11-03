@@ -24,7 +24,7 @@ const Navlinks = () => {
               })} bg-slate-400 text-white`
             : buttonVariants({ variant: 'ghost' })
         }
-        to='/all-products'
+        to={{ pathname: '/all-products', search: '?page=1' }}
       >
         All Products
       </NavLink>

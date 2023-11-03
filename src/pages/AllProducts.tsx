@@ -11,8 +11,9 @@ import {
 import { Link, useSearchParams } from 'react-router-dom'
 import { Spinner } from '@/components'
 import { MouseEvent, useEffect, useState } from 'react'
+import { handleSortQuery, handleURLSortQuery } from '@/utils/handleQueryString'
 
-interface Product {
+export interface Product {
   _id: string
   name: string
   brand: string
@@ -24,43 +25,53 @@ interface Product {
 
 const AllProducts = () => {
   const [sortBy, setSortBy] = useState('a-z')
-  const [skip, setSkip] = useState(0)
+  const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   // calculating the total pages
   const { data: totalData } = useGetAllProducts('a-z', 0, 0)
   const totalPages = Math.ceil(totalData?.data.length / limit)
-  const currentPage = (skip + limit) / 10
-  const { data, isLoading } = useGetAllProducts(sortBy, skip, limit)
-
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const { data, isLoading } = useGetAllProducts(sortBy, page, limit)
+
+  // get details from query string and render the products
   useEffect(() => {
-    const page = searchParams.get('page')
-
-    setSkip((Number(page) - 1) * 10)
-
+    const urlLimit = searchParams.get('limit')
+    const urlPage = searchParams.get('page')
+    const urlSort = searchParams.get('sort')
+    if (urlLimit && sortBy && urlSort) {
+      setSortBy(handleURLSortQuery(urlSort)!)
+      setPage(Number(urlPage))
+      setLimit(Number(urlLimit))
+    }
     if (data?.data.length === 0) throw new Error('No available products')
-  }, [currentPage, setSearchParams, searchParams, skip, data])
+  }, [data, searchParams, sortBy, totalPages])
 
   const handlePagination = (e: MouseEvent) => {
     const target = e.target as HTMLButtonElement
-    setSkip(Number(target.value))
+    setPage(Number(target.value))
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   const handleSortBy = (value: string) => {
     setSortBy(value)
-    // reset page skipping when any of the sort option is selected
-    setSkip(0)
+
+    const sortQuery = handleSortQuery(value)
+
+    // reset page when any of the sort option is selected
+    setSearchParams({ page: '1', sort: sortQuery!, limit: limit.toString() })
   }
 
   const handleLimit = (value: string) => {
     setLimit(Number(value))
-    setSkip(0)
+    setPage(1)
+    const sortQuery = handleSortQuery(sortBy)
+    setSearchParams({ page: '1', sort: sortQuery!, limit: value })
   }
+
   return (
     <div className='flex flex-col items-center p-10 relative'>
-      <div className='flex justify-between gap-4 w-full px-10'>
+      <div className='flex justify-between gap-4 w-full xl:px-10'>
         <div>
           <Select onValueChange={(value) => handleLimit(value)}>
             <SelectTrigger className='sm:w-[180px] w-fit'>
@@ -143,17 +154,16 @@ const AllProducts = () => {
         }}
         className='join'
       >
-        {currentPage > 1 && (
+        {page > 1 && (
           <Link
             to={{
               pathname: '/all-products',
-              search: `?page=${currentPage - 1}`,
+              search: `?page=${page - 1}&sort=${handleSortQuery(
+                sortBy
+              )}&limit=${limit}`,
             }}
           >
-            <button
-              value={(currentPage - 2) * limit}
-              className='join-item btn btn-md'
-            >
+            <button value={page - 1} className='join-item btn btn-md'>
               {'<'}
             </button>
           </Link>
@@ -161,12 +171,17 @@ const AllProducts = () => {
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <Link
             key={pageNum}
-            to={{ pathname: '/all-products', search: `?page=${pageNum}` }}
+            to={{
+              pathname: '/all-products',
+              search: `?page=${pageNum}&sort=${handleSortQuery(
+                sortBy
+              )}&limit=${limit}`,
+            }}
           >
             <button
-              value={(pageNum - 1) * limit}
+              value={pageNum}
               className={`join-item btn btn-md ${
-                pageNum === currentPage
+                pageNum === page
                   ? 'btn-active bg-red-500 text-black hover:bg-red-500'
                   : ''
               }`}
@@ -175,17 +190,17 @@ const AllProducts = () => {
             </button>
           </Link>
         ))}
-        {currentPage < totalPages && (
+
+        {page < totalPages && (
           <Link
             to={{
               pathname: '/all-products',
-              search: `?page=${currentPage + 1}`,
+              search: `?page=${page + 1}&sort=${handleSortQuery(
+                sortBy
+              )}&limit=${limit}`,
             }}
           >
-            <button
-              value={currentPage * limit}
-              className='join-item btn btn-md'
-            >
+            <button value={page + 1} className='join-item btn btn-md'>
               {'>'}
             </button>
           </Link>

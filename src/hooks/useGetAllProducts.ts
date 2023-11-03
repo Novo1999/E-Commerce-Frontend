@@ -4,12 +4,18 @@ import { useQuery } from '@tanstack/react-query'
 
 export const getAllProducts = async (
   sortBy: string,
-  skip: number,
+  page: number,
   limit: number
 ) => {
+  const handleSkip = () => {
+    let skip
+    if (page > 1) skip = (page - 1) * limit
+    return skip
+  }
+
   try {
     const products = await customFetch.get(
-      `products/all-product?sort=${sortBy}&limit=${limit}&skip=${skip}`
+      `products/all-product?sort=${sortBy}&limit=${limit}&skip=${handleSkip()}`
     )
     return products
   } catch (error) {
@@ -21,12 +27,12 @@ export const getAllProducts = async (
 
 export const useGetAllProducts = (
   sortBy: string,
-  skip: number,
+  page: number,
   limit: number
 ) => {
   const { data, isLoading } = useQuery({
-    queryKey: ['all-products', sortBy, skip, limit],
-    queryFn: async () => getAllProducts(sortBy, skip, limit),
+    queryKey: ['all-products', sortBy, page, limit],
+    queryFn: async () => getAllProducts(sortBy, page, limit),
   })
   return { data, isLoading }
 }
