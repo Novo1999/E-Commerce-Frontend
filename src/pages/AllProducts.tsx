@@ -47,12 +47,14 @@ const AllProducts = () => {
     if (data?.data.length === 0) throw new Error('No available products')
   }, [data, searchParams, sortBy, totalPages])
 
+  // handle pagination buttons
   const handlePagination = (e: MouseEvent) => {
     const target = e.target as HTMLButtonElement
     setPage(Number(target.value))
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
+  // handle sort by selections
   const handleSortBy = (value: string) => {
     setSortBy(value)
 

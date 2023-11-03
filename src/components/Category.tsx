@@ -58,9 +58,12 @@ const Category = () => {
             return (
               <Link
                 to={`/products/product/${id}`}
-                className=' shadow-md rounded-lg p-4 flex flex-col items-center gap-2'
+                className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group'
                 key={id}
               >
+                <div className='absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 bg-slate-400 py-2 text-white w-full text-center'>
+                  View
+                </div>
                 <img
                   className='h-36 min-[375px]:h-48 m-auto'
                   src={link}

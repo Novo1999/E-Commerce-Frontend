@@ -59,7 +59,7 @@ export const Register = ({ on }: { on?: string }) => {
   return (
     <Card
       className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72 sm:w-96 top-80' : 'right-20 top-16'
+        on === 'mobile' ? 'w-72 sm:w-96 top-80' : 'right-20 top-16 xl:right-96'
       } `}
     >
       <CardHeader>
@@ -95,7 +95,7 @@ export const Login = ({ on }: { on?: string }) => {
   return (
     <Card
       className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72  sm:w-96 top-80' : 'right-20 top-16'
+        on === 'mobile' ? 'w-72  sm:w-96 top-80' : 'right-20 top-16 xl:right-52'
       } `}
     >
       <CardHeader>
