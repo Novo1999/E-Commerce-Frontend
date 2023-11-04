@@ -18,6 +18,7 @@ module.exports = {
     extend: {
       fontFamily: {
         cuprum: 'cuprum',
+        poppins: 'poppins',
       },
       colors: {
         border: 'hsl(var(--border))',

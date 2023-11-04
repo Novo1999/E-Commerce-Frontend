@@ -5,7 +5,7 @@ const Hero = () => {
     <div className='carousel w-full'>
       {/* IMG 1 */}
       <div id='slide1' className='carousel-item relative w-full'>
-        <div className='absolute bottom-3 right-4 font-cuprum text-2xl z-10 text-white flex lg:bottom-24 xl:bottom-[10rem] xl:text-7xl flex-col sm:text-6xl'>
+        <div className='absolute bottom-3 right-4 font-cuprum text-2xl z-10 text-white flex lg:bottom-24 lg:right-7 xl:bottom-[10rem] xl:text-7xl flex-col sm:text-6xl'>
           <Link
             className='bg-white text-black rounded-full absolute right-0 bottom-8 sm:text-2xl text-sm p-3 sm:p-10 xl:bottom-20 sm:bottom-16 hover:text-white hover:bg-black shadow-xl w-fit'
             to='/all-products'
