@@ -79,7 +79,7 @@ const Category = () => {
       )}
       {productsByCategory?.data.length > 4 && (
         <Link
-          className='ml-4 xl:ml-20'
+          className='ml-4 xl:ml-20 w-fit'
           to={`products/product?category=${category}`}
         >
           <Button variant='outline'>See More</Button>

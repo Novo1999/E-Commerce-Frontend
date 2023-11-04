@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 
 const PristineBanner = () => {
   return (
-    <section className='flex flex-col gap-4 items-center justify-center lg:flex-row w-fit sm:m-auto xl:gap-20 sm:mt-10 xl:m-auto xl:mt-12 mt-10 mx-6 lg:mx-14'>
+    <section className='flex flex-col gap-4 items-center justify-center lg:flex-row w-fit mt-10 mx-6 sm:mx-auto lg:mx-20 xl:mx-auto xl:gap-20'>
       <figure className='relative hover:opacity-90 transition-opacity'>
         <img
-          className='h-fit lg:w-[51rem] xl:w-[56rem]'
+          className='h-fit lg:h-[35rem] xl:h-[37.3rem] object-cover'
           src='/assets/pristine-1.jpg'
           alt='image'
         />
@@ -21,7 +21,7 @@ const PristineBanner = () => {
       </figure>
       <figure className='relative flex flex-col items-center hover:opacity-90 transition-opacity'>
         <img
-          className='h-fit lg:h-[27.5rem] xl:h-[37.4rem] lg:object-cover'
+          className='h-fit lg:h-[35rem] xl:h-[37.3rem] object-cover'
           src='/assets/pristine-2.jpg'
           alt='image'
         />

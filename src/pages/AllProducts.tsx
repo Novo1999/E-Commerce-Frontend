@@ -11,7 +11,11 @@ import {
 import { Link, useSearchParams } from 'react-router-dom'
 import { Spinner } from '@/components'
 import { MouseEvent, useEffect, useState } from 'react'
-import { handleSortQuery, handleURLSortQuery } from '@/utils/handleQueryString'
+import {
+  handleSelectPlaceholderValue,
+  handleSortQuery,
+  handleURLSortQuery,
+} from '@/utils/handleQueryString'
 
 export interface Product {
   _id: string
@@ -73,11 +77,11 @@ const AllProducts = () => {
 
   return (
     <div className='flex flex-col items-center p-10 relative'>
-      <div className='flex justify-between gap-4 w-full xl:px-10'>
+      <div className='flex justify-between gap-4 w-full lg:px-[2rem] xl:px-[4rem] 2xl:px-[17rem]'>
         <div>
           <Select onValueChange={(value) => handleLimit(value)}>
             <SelectTrigger className='sm:w-[180px] w-fit'>
-              <SelectValue placeholder='Show' />
+              <SelectValue placeholder={searchParams.get('limit') || 'Show'} />
             </SelectTrigger>
             <SelectContent>
               {Array.from(
@@ -93,7 +97,7 @@ const AllProducts = () => {
         </div>
         <Select onValueChange={(value) => handleSortBy(value)}>
           <SelectTrigger className='sm:w-[180px] w-fit'>
-            <SelectValue placeholder='Sort By' />
+            <SelectValue placeholder={handleSelectPlaceholderValue(sortBy)} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='a-z'>Name (A - Z)</SelectItem>
@@ -151,7 +155,6 @@ const AllProducts = () => {
       </div>
       <div
         onClick={(e) => {
-          // console.log(e.target.value)
           handlePagination(e)
         }}
         className='join'

@@ -1,35 +1,39 @@
 export const handleURLSortQuery = (value: string) => {
-  let sortQuery
   switch (value) {
     case 'name-asc':
-      sortQuery = 'a-z'
-      break
+      return 'a-z'
     case 'name-desc':
-      sortQuery = 'z-a'
-      break
+      return 'z-a'
     case 'price-asc':
-      sortQuery = 'price[a-z]'
-      break
+      return 'price[a-z]'
+
     case 'price-desc':
-      sortQuery = 'price[z-a]'
+      return 'price[z-a]'
   }
-  return sortQuery
 }
 
 export const handleSortQuery = (value: string) => {
-  let sortQuery
   switch (value) {
     case 'a-z':
-      sortQuery = 'name-asc'
-      break
+      return 'name-asc'
     case 'z-a':
-      sortQuery = 'name-desc'
-      break
+      return 'name-desc'
     case 'price[a-z]':
-      sortQuery = 'price-asc'
-      break
+      return 'price-asc'
     case 'price[z-a]':
-      sortQuery = 'price-desc'
+      return 'price-desc'
   }
-  return sortQuery
+}
+
+export const handleSelectPlaceholderValue = (value: string) => {
+  switch (value) {
+    case 'a-z':
+      return 'Name [A-Z]'
+    case 'z-a':
+      return 'Name [Z-A]'
+    case 'price[a-z]':
+      return 'Price (Low-High)'
+    case 'price[z-a]':
+      return 'Price (High-Low)'
+  }
 }
