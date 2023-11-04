@@ -37,3 +37,10 @@ export const handleSelectPlaceholderValue = (value: string) => {
       return 'Price (High-Low)'
   }
 }
+
+export const constructQueryString = (value: string) => {
+  const regex = /[^&\s]+/g
+  const matches = value.match(regex)
+
+  return matches
+}

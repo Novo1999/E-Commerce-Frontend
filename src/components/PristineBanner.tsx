@@ -10,7 +10,7 @@ const PristineBanner = () => {
           alt='image'
         />
         <figcaption className='text-base sm:text-3xl drop-shadow-lg text-center font-poppins mt-4 absolute bottom-3 right-3 text-white lg:text-3xl xl:text-6xl whitespace-nowrap font-semibold'>
-          In Pristine Condition
+          Pristine Condition
         </figcaption>
         <Link
           className='bg-white text-black rounded-full absolute xl:bottom-24 p-2 min-[375px]:p-4 xl:p-6 lg:p-4 bottom-14 right-4 invisible sm:visible sm:text-lg text-sm hover:text-white hover:bg-black shadow-xl w-fit'

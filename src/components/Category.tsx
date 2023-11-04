@@ -5,13 +5,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Product } from '@/pages/AllProducts'
+
 import customFetch from '@/utils/customFetch'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Spinner } from '.'
+import { constructQueryString } from '@/utils/handleQueryString'
 
 const Category = () => {
   // getting the categories for the select
@@ -19,7 +20,7 @@ const Category = () => {
     queryKey: ['categories'],
     queryFn: async () => await customFetch.get('products/categories'),
   })
-  const [category, setCategory] = useState('Cardio+Equipment')
+  const [category, setCategory] = useState('Cardio')
 
   // getting the products by category
   const { data: productsByCategory, isLoading } = useQuery({
@@ -29,7 +30,8 @@ const Category = () => {
   })
 
   const handleCategory = (value: string) => {
-    setCategory(value)
+    const query = constructQueryString(value)
+    setCategory(query![0])
   }
 
   return (

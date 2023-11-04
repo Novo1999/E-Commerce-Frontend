@@ -1,2 +1,5 @@
 export { default as HomeLayout } from './HomeLayout'
 export { default as Error } from './Error'
+export { default as AllProducts } from './AllProducts'
+export { default as ProductByCategory } from './ProductByCategory'
+export { default as SingleProduct } from './SingleProduct'

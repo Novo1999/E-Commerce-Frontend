@@ -4,9 +4,12 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import ErrorPage from './pages/Error.tsx'
 import App from './App.tsx'
-import AllProducts from './pages/AllProducts.tsx'
-import HomeLayout from './pages/HomeLayout.tsx'
-import SingleProduct from './pages/SingleProduct.tsx'
+import {
+  AllProducts,
+  HomeLayout,
+  SingleProduct,
+  ProductByCategory,
+} from './pages'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: '/products/product/:id',
         element: <SingleProduct />,
+      },
+      {
+        path: '/products/product',
+        element: <ProductByCategory />,
       },
     ],
   },

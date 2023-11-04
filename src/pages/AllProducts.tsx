@@ -1,5 +1,4 @@
 import { useGetAllProducts } from '@/hooks/useGetAllProducts'
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 
 import {
   Select,
@@ -9,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Link, useSearchParams } from 'react-router-dom'
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { Spinner } from '@/components'
 import { MouseEvent, useEffect, useState } from 'react'
 import {
@@ -17,7 +17,7 @@ import {
   handleURLSortQuery,
 } from '@/utils/handleQueryString'
 
-export interface Product {
+export interface ProductInterface {
   _id: string
   name: string
   brand: string
@@ -112,7 +112,7 @@ const AllProducts = () => {
         {isLoading ? (
           <Spinner />
         ) : (
-          data?.data?.map((product: Product) => {
+          data?.data?.map((product: ProductInterface) => {
             const { _id: id, name, brand, price, category, link } = product
             return (
               <div
