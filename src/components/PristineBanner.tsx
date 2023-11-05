@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const PristineBanner = () => {
   return (
-    <section className='flex flex-col gap-4 items-center justify-center lg:flex-row w-fit mt-10 mx-6 sm:mx-auto lg:mx-20 xl:mx-auto xl:gap-20'>
+    <section className='flex flex-col gap-4 items-center justify-center lg:flex-row w-fit mt-10 mx-6 sm:mx-0 lg:mx-20 xl:gap-20'>
       <figure className='relative hover:opacity-90 transition-opacity'>
         <img
           className='h-fit lg:h-[35rem] xl:h-[37.3rem] object-cover'

@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Spinner } from '.'
 import { constructQueryString } from '@/utils/handleQueryString'
+import { ProductInterface } from '@/pages/AllProducts'
 
 const Category = () => {
   // getting the categories for the select
@@ -35,7 +36,7 @@ const Category = () => {
   }
 
   return (
-    <section className='flex flex-col mx-2 sm:mx-5 h-fit sm:h-[50rem] lg:mx-40'>
+    <section className='flex flex-col h-fit sm:h-[50rem] lg:w-[56rem] xl:w-[90rem] 2xl:w-[96rem]'>
       <div className='flex justify-between mx-4 xl:mx-20 text-sm items-center mt-6'>
         <h2 className='font-semibold sm:text-xl'>Shop by category</h2>
         <Select onValueChange={(value) => handleCategory(value)}>
@@ -55,28 +56,30 @@ const Category = () => {
         <Spinner />
       ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 m-4 mt-10 xl:mx-20 gap-4'>
-          {productsByCategory?.data.slice(0, 4).map((product: Product) => {
-            const { _id: id, brand, name, price, link } = product
-            return (
-              <Link
-                to={`/products/product/${id}`}
-                className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group'
-                key={id}
-              >
-                <div className='absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 bg-slate-400 py-2 text-white w-full text-center'>
-                  View
-                </div>
-                <img
-                  className='h-36 min-[375px]:h-48 m-auto'
-                  src={link}
-                  alt='product image'
-                />
-                <p className='font-semibold'>{name}</p>
-                <p className='text-xs'>{brand}</p>
-                <p className='font-bold'>${price}</p>
-              </Link>
-            )
-          })}
+          {productsByCategory?.data
+            .slice(0, 4)
+            .map((product: ProductInterface) => {
+              const { _id: id, brand, name, price, link } = product
+              return (
+                <Link
+                  to={`/products/product/${id}`}
+                  className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group'
+                  key={id}
+                >
+                  <div className='absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 bg-slate-400 py-2 text-white w-full text-center'>
+                    View
+                  </div>
+                  <img
+                    className='h-36 min-[375px]:h-48 m-auto'
+                    src={link}
+                    alt='product image'
+                  />
+                  <p className='font-semibold'>{name}</p>
+                  <p className='text-xs'>{brand}</p>
+                  <p className='font-bold'>${price}</p>
+                </Link>
+              )
+            })}
         </div>
       )}
       {productsByCategory?.data.length > 4 && (
