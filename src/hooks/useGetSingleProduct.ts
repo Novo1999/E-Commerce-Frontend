@@ -15,10 +15,10 @@ const getSingleProduct = async (id: string) => {
 export const useGetSingleProduct = () => {
   const { id } = useParams()
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['single-product', id],
     queryFn: async () => await getSingleProduct(id!),
   })
 
-  return { data }
+  return { data, isLoading }
 }
