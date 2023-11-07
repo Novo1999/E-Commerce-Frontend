@@ -6,7 +6,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
   const { _id: id, name, brand, price, category, link } = product
   return (
     <div
-      className='card shadow-xl h-fit w-full min-[375px]:w-64 min-[425px]:w-72 border-2 pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
+      className='card shadow-xl h-fit w-full min-[375px]:w-64 min-[425px]:w-72 xl:w-80 lg:h-full border-2 pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
       key={id}
     >
       <Link
@@ -14,7 +14,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
         className='p-4 h-full cursor-pointer tooltip tooltip-info flex justify-center items-center'
         data-tip='View details'
       >
-        <img className='h-24 sm:h-32' src={link} alt='Shoes' />
+        <img className='h-24 sm:h-32 xl:h-40' src={link} alt='Shoes' />
       </Link>
       <div className='card-body'>
         <h2 className='card-title text-sm sm:text-lg'>{name}</h2>
