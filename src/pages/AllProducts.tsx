@@ -1,4 +1,5 @@
 import { useGetAllProducts } from '@/hooks/useGetAllProducts'
+import { debounce } from 'lodash'
 
 import {
   Select,
@@ -9,7 +10,7 @@ import {
 } from '@/components/ui/select'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Product, Spinner } from '@/components'
-import { MouseEvent, useEffect, useState } from 'react'
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from 'react'
 import {
   handleSelectPlaceholderValue,
   handleSortQuery,
@@ -49,8 +50,6 @@ const AllProducts = () => {
   const { data: productsByName, isLoading: isProductsByNameLoading } =
     useGetProductByName(productNameInput!)
 
-  console.log(productsByName)
-
   // get details from query string and render the products
   useEffect(() => {
     const urlLimit = searchParams.get('limit')
@@ -89,6 +88,21 @@ const AllProducts = () => {
     setSearchParams({ page: '1', sort: sortQuery!, limit: value })
   }
 
+  // input change event
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setProductNameInput(e.target.value)
+  }
+  // Debounce
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChangeInput, 400)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel()
+    }
+  })
+
   return (
     <div className='flex flex-col items-center p-10 relative'>
       <div className='flex justify-between gap-4 w-full lg:px-[2rem] xl:px-[4rem] 2xl:px-[13rem]'>
@@ -122,16 +136,18 @@ const AllProducts = () => {
             </Button>
           </div>
         )}
+        {/* SEARCH INPUT */}
         {isSearchOpen && (
-          // SEARCH INPUT
           <div className='flex flex-row w-36 min-[375px]:w-40 min-[425px]:w-52 lg:w-60 gap-2'>
             <Input
-              onChange={(e) => setProductNameInput(e.target.value)}
-              className='grow-[2] border border-slate-200'
+              autoFocus
+              onChange={debouncedResults}
+              className=' border border-slate-200'
               type='name'
               placeholder='Search'
             />
             <Button
+              className='sm:px-3'
               onClick={() => {
                 setIsSearchOpen(false)
                 setProductNameInput('')
@@ -144,21 +160,23 @@ const AllProducts = () => {
           </div>
         )}
         {/* SORT */}
-        <Select onValueChange={(value) => handleSortBy(value)}>
-          <SelectTrigger className='sm:w-[180px] w-fit'>
-            <SelectValue placeholder={handleSelectPlaceholderValue(sortBy)} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='a-z'>Name (A - Z)</SelectItem>
-            <SelectItem value='z-a'>Name (Z - A)</SelectItem>
-            <SelectItem value='price[a-z]'>Price (Low-High)</SelectItem>
-            <SelectItem value='price[z-a]'>Price (High-Low)</SelectItem>
-          </SelectContent>
-        </Select>
+        {productNameInput.length < 1 && (
+          <Select onValueChange={(value) => handleSortBy(value)}>
+            <SelectTrigger className='sm:w-[180px] w-fit'>
+              <SelectValue placeholder={handleSelectPlaceholderValue(sortBy)} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='a-z'>Name (A - Z)</SelectItem>
+              <SelectItem value='z-a'>Name (Z - A)</SelectItem>
+              <SelectItem value='price[a-z]'>Price (Low-High)</SelectItem>
+              <SelectItem value='price[z-a]'>Price (High-Low)</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* GET ALL PRODUCTS OR BY SEARCH */}
-      <div className='p-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center'>
+      <div className='p-10 pb-60 sm:pb-0 grid grid-cols-1 gap-8 sm:grid-cols-2 min-h-screen lg:grid-cols-3 xl:grid-cols-4 place-items-center sm:place-items-start mb-6'>
         {productNameInput ? (
           isProductsByNameLoading ? (
             <Spinner />
@@ -175,64 +193,69 @@ const AllProducts = () => {
           })
         )}
       </div>
-      <div
-        onClick={(e) => {
-          handlePagination(e)
-        }}
-        className='join'
-      >
-        {page > 1 && (
-          <Link
-            to={{
-              pathname: '/all-products',
-              search: `?page=${page - 1}&sort=${handleSortQuery(
-                sortBy
-              )}&limit=${limit}`,
-            }}
-          >
-            <button value={page - 1} className='join-item btn btn-md'>
-              {'<'}
-            </button>
-          </Link>
-        )}
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <Link
-            key={pageNum}
-            to={{
-              pathname: '/all-products',
-              search: `?page=${pageNum}&sort=${handleSortQuery(
-                sortBy
-              )}&limit=${limit}`,
-            }}
-          >
-            <button
-              value={pageNum}
-              className={`join-item btn btn-md ${
-                pageNum === page
-                  ? 'btn-active bg-red-500 text-black hover:bg-red-500'
-                  : ''
-              }`}
+      {/* PAGINATION */}
+      {productNameInput.length < 1 && (
+        <div
+          onClick={(e) => {
+            handlePagination(e)
+          }}
+          className='join'
+        >
+          {page > 1 && (
+            <Link
+              to={{
+                pathname: '/all-products',
+                search: `?page=${page - 1}&sort=${handleSortQuery(
+                  sortBy
+                )}&limit=${limit}`,
+              }}
             >
-              {pageNum}
-            </button>
-          </Link>
-        ))}
+              <button value={page - 1} className='join-item btn btn-md'>
+                {'<'}
+              </button>
+            </Link>
+          )}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+            (pageNum) => (
+              <Link
+                key={pageNum}
+                to={{
+                  pathname: '/all-products',
+                  search: `?page=${pageNum}&sort=${handleSortQuery(
+                    sortBy
+                  )}&limit=${limit}`,
+                }}
+              >
+                <button
+                  value={pageNum}
+                  className={`join-item btn btn-md ${
+                    pageNum === page
+                      ? 'btn-active bg-red-500 text-black hover:bg-red-500'
+                      : ''
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              </Link>
+            )
+          )}
 
-        {page < totalPages && (
-          <Link
-            to={{
-              pathname: '/all-products',
-              search: `?page=${page + 1}&sort=${handleSortQuery(
-                sortBy
-              )}&limit=${limit}`,
-            }}
-          >
-            <button value={page + 1} className='join-item btn btn-md'>
-              {'>'}
-            </button>
-          </Link>
-        )}
-      </div>
+          {page < totalPages && (
+            <Link
+              to={{
+                pathname: '/all-products',
+                search: `?page=${page + 1}&sort=${handleSortQuery(
+                  sortBy
+                )}&limit=${limit}`,
+              }}
+            >
+              <button value={page + 1} className='join-item btn btn-md'>
+                {'>'}
+              </button>
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   )
 }
