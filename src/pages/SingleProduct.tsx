@@ -91,9 +91,13 @@ const SingleProduct = () => {
         <p className='text-center mt-10 mb-10'>Related Products</p>
       )}
       <div className='mx-8 pb-10 gap-4 grid place-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
-        {relatedProducts.map((product: ProductInterface) => {
-          return <Product key={product._id} product={product} />
-        })}
+        {typeof relatedProducts !== 'string' ? (
+          relatedProducts.map((product: ProductInterface) => {
+            return <Product key={product._id} product={product} />
+          })
+        ) : (
+          <p>{relatedProducts}</p>
+        )}
       </div>
     </section>
   )
