@@ -8,10 +8,11 @@ import { ProductInterface } from './AllProducts'
 const SingleProduct = () => {
   const { data, isLoading } = useGetSingleProduct()
 
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+
   const product = data?.data.product
   const relatedProducts = data?.data?.relatedProducts
 
-  console.log(isLoading)
   if (!product) {
     return isLoading ? (
       <div className='min-h-screen bg-white'>

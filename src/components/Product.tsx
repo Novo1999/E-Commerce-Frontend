@@ -6,7 +6,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
   const { _id: id, name, brand, price, category, link } = product
   return (
     <div
-      className='card shadow-xl h-fit w-full min-[375px]:w-64 min-[425px]:w-72 xl:w-80 lg:h-full border-2 pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
+      className='card shadow-xl h-fit w-60 min-[375px]:w-64 min-[425px]:w-72 xl:w-80 lg:h-full border-2 pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
       key={id}
     >
       <Link

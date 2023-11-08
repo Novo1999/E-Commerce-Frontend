@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button'
 
 const Navlinks = () => {
   return (
-    <div className='flex gap-0 lg:gap-4'>
+    <div className='flex gap-0 lg:gap-4 relative sm:right-2 lg:right-10'>
       <NavLink
         className={({ isActive }) =>
           isActive

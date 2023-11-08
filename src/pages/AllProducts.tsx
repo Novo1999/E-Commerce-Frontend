@@ -8,14 +8,17 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Link, useSearchParams } from 'react-router-dom'
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
-import { Spinner } from '@/components'
+import { Product, Spinner } from '@/components'
 import { MouseEvent, useEffect, useState } from 'react'
 import {
   handleSelectPlaceholderValue,
   handleSortQuery,
   handleURLSortQuery,
 } from '@/utils/handleQueryString'
+import { Button } from '@/components/ui/button'
+import { Search, X } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { useGetProductByName } from '@/hooks/useGetProductByName'
 
 export interface ProductInterface {
   _id: string
@@ -31,12 +34,22 @@ const AllProducts = () => {
   const [sortBy, setSortBy] = useState('a-z')
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
+  const [productNameInput, setProductNameInput] = useState('')
   // calculating the total pages
   const { data: totalData } = useGetAllProducts('a-z', 0, 0)
   const totalPages = Math.ceil(totalData?.data.length / limit)
   const [searchParams, setSearchParams] = useSearchParams()
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const { data: allProducts, isLoading } = useGetAllProducts(
+    sortBy,
+    page,
+    limit
+  )
 
-  const { data, isLoading } = useGetAllProducts(sortBy, page, limit)
+  const { data: productsByName, isLoading: isProductsByNameLoading } =
+    useGetProductByName(productNameInput!)
+
+  console.log(productsByName)
 
   // get details from query string and render the products
   useEffect(() => {
@@ -48,8 +61,8 @@ const AllProducts = () => {
       setPage(Number(urlPage))
       setLimit(Number(urlLimit))
     }
-    if (data?.data.length === 0) throw new Error('No available products')
-  }, [data, searchParams, sortBy, totalPages])
+    if (allProducts?.data.length === 0) throw new Error('No available products')
+  }, [allProducts, searchParams, sortBy, totalPages])
 
   // handle pagination buttons
   const handlePagination = (e: MouseEvent) => {
@@ -68,6 +81,7 @@ const AllProducts = () => {
     setSearchParams({ page: '1', sort: sortQuery!, limit: limit.toString() })
   }
 
+  // handle limit
   const handleLimit = (value: string) => {
     setLimit(Number(value))
     setPage(1)
@@ -77,24 +91,59 @@ const AllProducts = () => {
 
   return (
     <div className='flex flex-col items-center p-10 relative'>
-      <div className='flex justify-between gap-4 w-full lg:px-[2rem] xl:px-[4rem] 2xl:px-[17rem]'>
-        <div>
-          <Select onValueChange={(value) => handleLimit(value)}>
-            <SelectTrigger className='sm:w-[180px] w-fit'>
-              <SelectValue placeholder={searchParams.get('limit') || 'Show'} />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from(
-                { length: totalData?.data.length / 10 },
-                (_, i) => i + 1
-              ).map((page) => (
-                <SelectItem key={page} value={(page * 10).toString()}>
-                  {page * 10}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className='flex justify-between gap-4 w-full lg:px-[2rem] xl:px-[4rem] 2xl:px-[13rem]'>
+        {!isSearchOpen && (
+          <div className='flex justify-center gap-4'>
+            {/* SELECT */}
+            <Select onValueChange={(value) => handleLimit(value)}>
+              <SelectTrigger className='sm:w-[180px] w-fit'>
+                <SelectValue
+                  placeholder={searchParams.get('limit') || 'Show'}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from(
+                  { length: totalData?.data.length / 10 },
+                  (_, i) => i + 1
+                ).map((page) => (
+                  <SelectItem key={page} value={(page * 10).toString()}>
+                    {page * 10}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* SEARCH BTN*/}
+            <Button
+              onClick={() => setIsSearchOpen(true)}
+              variant='outline'
+              size='icon'
+            >
+              <Search className='h-4 w-4' />
+            </Button>
+          </div>
+        )}
+        {isSearchOpen && (
+          // SEARCH INPUT
+          <div className='flex flex-row w-36 min-[375px]:w-40 min-[425px]:w-52 lg:w-60 gap-2'>
+            <Input
+              onChange={(e) => setProductNameInput(e.target.value)}
+              className='grow-[2] border border-slate-200'
+              type='name'
+              placeholder='Search'
+            />
+            <Button
+              onClick={() => {
+                setIsSearchOpen(false)
+                setProductNameInput('')
+              }}
+              variant='outline'
+              size='icon'
+            >
+              <X className='h-4 w-4' />
+            </Button>
+          </div>
+        )}
+        {/* SORT */}
         <Select onValueChange={(value) => handleSortBy(value)}>
           <SelectTrigger className='sm:w-[180px] w-fit'>
             <SelectValue placeholder={handleSelectPlaceholderValue(sortBy)} />
@@ -108,48 +157,21 @@ const AllProducts = () => {
         </Select>
       </div>
 
-      <div className='min-h-screen p-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center'>
-        {isLoading ? (
+      {/* GET ALL PRODUCTS OR BY SEARCH */}
+      <div className='p-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center'>
+        {productNameInput ? (
+          isProductsByNameLoading ? (
+            <Spinner />
+          ) : (
+            productsByName?.data?.map((product: ProductInterface) => {
+              return <Product key={product._id} product={product} />
+            })
+          )
+        ) : isLoading ? (
           <Spinner />
         ) : (
-          data?.data?.map((product: ProductInterface) => {
-            const { _id: id, name, brand, price, category, link } = product
-            return (
-              <div
-                className='card shadow-xl w-fit min-[375px]:w-64 min-[425px]:w-72 border-2 pt-4 sm:p-4 sm:gap-2 border-black'
-                key={id}
-              >
-                <Link
-                  to={`/products/product/${id}`}
-                  className='p-4 h-full cursor-pointer tooltip tooltip-info flex justify-center items-center'
-                  data-tip='View details'
-                >
-                  <img className='h-24 sm:h-32' src={link} alt='Shoes' />
-                </Link>
-                <div className='card-body'>
-                  <h2 className='card-title text-sm sm:text-lg'>{name}</h2>
-                  <p className='text-sm'>By {brand}</p>
-                  <p className='font-bold text-sm'>Price: ${price}</p>
-                  <div className='card-actions justify-end'>
-                    <div className='badge text-xs lg:text-md badge-outline'>
-                      {category}
-                    </div>
-                  </div>
-                  <div className='flex justify-between items-center gap-2'>
-                    <button className='btn-sm rounded-lg btn-warning'>
-                      <AiOutlineMinus />
-                    </button>
-                    <kbd className='kbd text-white h-full w-full'>0</kbd>
-                    <button className='btn-sm rounded-lg btn-warning'>
-                      <AiOutlinePlus />
-                    </button>
-                  </div>
-                  <button className='btn-sm rounded-lg btn-active btn-accent mt-4'>
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
-            )
+          allProducts?.data?.map((product: ProductInterface) => {
+            return <Product key={product._id} product={product} />
           })
         )}
       </div>

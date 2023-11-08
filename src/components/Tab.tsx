@@ -9,7 +9,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Profile } from '.'
 import { useEffect, useState } from 'react'
 
 const Tab = () => {
@@ -31,7 +30,7 @@ const Tab = () => {
   return (
     <Tabs
       defaultValue='account'
-      className='w-[250px] flex items-center gap-4 tabs'
+      className='w-[250px] flex items-center gap-4 tabs relative sm:right-2 lg:right-10'
     >
       <TabsList onClick={() => setIsTabContentOpen(true)}>
         <TabsTrigger value='register'>Register</TabsTrigger>
@@ -47,9 +46,6 @@ const Tab = () => {
           <Login />
         </TabsContent>
       )}
-      <div className='flex items-center'>
-        <Profile />
-      </div>
     </Tabs>
   )
 }
