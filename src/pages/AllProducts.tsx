@@ -29,6 +29,7 @@ export interface ProductInterface {
   category: string
   description: string
   link: string
+  quantity?: number
 }
 
 const AllProducts = () => {

@@ -29,8 +29,10 @@ const SingleProduct = () => {
   return isLoading ? (
     <Spinner />
   ) : (
-    <section className='py-6 h-full gap-2 px-2 font-poppins xl:mx-40 2xl:mx-72'>
-      <div className='border-2 border-slate-400 rounded-lg mx-4 p-4 bg-slate-200 flex flex-col sm:flex-row sm:h-[28rem] justify-between xl:justify-center xl:gap-40 lg:h-[32rem] xl:h-[36rem] items-center'>
+    <section className='py-6 h-full gap-2 px-2 font-poppins xl:mx-40 2xl:mx-72 min-h-screen'>
+      <div
+        className={`border-2 border-slate-400 rounded-lg mx-4 p-4 bg-slate-200 flex flex-col sm:flex-row  justify-between xl:justify-center xl:gap-40 lg:h-[32rem] xl:h-[36rem] items-center `}
+      >
         {/* LEFT DIV */}
         <div className='place-items-start flex flex-col lg:items-center lg:gap-10 sm:w-60 lg:w-96'>
           <div className=''>

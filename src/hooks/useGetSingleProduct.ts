@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 
-const getSingleProduct = async (id: string) => {
+export const getSingleProduct = async (id: string) => {
   try {
     const product = await customFetch.get(`products/product/${id}`)
     return product

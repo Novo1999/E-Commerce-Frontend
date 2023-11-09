@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { ProductInterface } from '@/pages/AllProducts'
-import { CartContext, cartStatus } from '@/App'
+import { CartContext } from '@/App'
 import { useContext } from 'react'
-import { useHandleQuantity } from '@/hooks/useHandleQuantity'
+import { useHandleQuantity } from '@/hooks/useHandleCart'
+
+type cartItem = { id: string; quantity: number }
 
 const Product = ({ product }: { product: ProductInterface }) => {
-  const { cartStatus } = useContext(CartContext)
-  const { handleIncreaseQuantity, handleDecreaseQuantity } = useHandleQuantity()
+  const { cartStatus, setCartStatus } = useContext(CartContext)
+  const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
+    useHandleQuantity()
 
-  const handleAddToCart = () => {}
+  // console.log(cartStatus)
 
   const { _id: id, name, brand, price, category, link } = product
   return (
@@ -41,8 +44,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
             <AiOutlineMinus />
           </button>
           <kbd className='kbd text-white h-full w-full'>
-            {cartStatus.find((item: cartStatus) => item.id === id)?.quantity ||
-              0}
+            {cartStatus.find((item: cartItem) => item.id === id)?.quantity || 0}
           </kbd>
           <button
             onClick={() => handleIncreaseQuantity(id)}
@@ -53,8 +55,9 @@ const Product = ({ product }: { product: ProductInterface }) => {
         </div>
 
         <button
-          className={`btn-sm rounded-lg btn-active btn-accent ${
-            cartStatus.find((item: cartStatus) => item.id === id)?.quantity
+          onClick={() => handleAddToCart(id)}
+          className={`btn-sm rounded-lg btn-active btn-accent  ${
+            cartStatus.find((item: { id: string }) => item.id === id)?.quantity
               ? 'visible'
               : 'invisible'
           } mt-4 hover:bg-cyan-700 duration-300`}
