@@ -2,14 +2,19 @@ import { Product, Spinner } from '@/components'
 import { useGetSingleProduct } from '@/hooks/useGetSingleProduct'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BsArrowRightCircleFill } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
+import { Link, Params, useParams } from 'react-router-dom'
 import { ProductInterface } from './AllProducts'
+import { useHandleCart } from '@/hooks/useHandleCart'
+import { useContext } from 'react'
+import { CartContext } from '@/App'
 
 const SingleProduct = () => {
   const { data, isLoading } = useGetSingleProduct()
-
+  const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
+    useHandleCart()
+  const { cartStatus } = useContext(CartContext)
   window.scrollTo({ top: 0, behavior: 'smooth' })
-
+  const { id }: { id?: string } = useParams()
   const product = data?.data.product
   const relatedProducts = data?.data?.relatedProducts
 
@@ -75,15 +80,27 @@ const SingleProduct = () => {
             </div>
           </Link>
           <div className='flex justify-center gap-4 items-center'>
-            <button className='btn-sm rounded-lg btn-warning'>
+            <button
+              onClick={() => handleDecreaseQuantity(id!)}
+              className='btn-sm rounded-lg btn-warning'
+            >
               <AiOutlineMinus />
             </button>
-            <kbd className='kbd text-white h-full w-fit'>0</kbd>
-            <button className='btn-sm rounded-lg btn-warning'>
+            <kbd className='kbd text-white h-full w-fit'>
+              {cartStatus.find((item: cartItem) => item.id === id)?.quantity ||
+                0}
+            </kbd>
+            <button
+              onClick={() => handleIncreaseQuantity(id!)}
+              className='btn-sm rounded-lg btn-warning'
+            >
               <AiOutlinePlus />
             </button>
           </div>
-          <button className='btn-md flex justify-center items-center rounded-lg w-fit btn-active btn-accent mt-4 p-4 m-auto sm:m-0'>
+          <button
+            onClick={() => handleAddToCart(id!)}
+            className='btn-md flex justify-center items-center rounded-lg w-fit btn-active btn-accent mt-4 p-4 m-auto sm:m-0'
+          >
             Add To Cart
           </button>
         </div>

@@ -3,21 +3,21 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { ProductInterface } from '@/pages/AllProducts'
 import { CartContext } from '@/App'
 import { useContext } from 'react'
-import { useHandleQuantity } from '@/hooks/useHandleCart'
+import { useHandleCart } from '@/hooks/useHandleCart'
 
 type cartItem = { id: string; quantity: number }
 
 const Product = ({ product }: { product: ProductInterface }) => {
   const { cartStatus, setCartStatus } = useContext(CartContext)
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
-    useHandleQuantity()
+    useHandleCart()
 
   // console.log(cartStatus)
 
   const { _id: id, name, brand, price, category, link } = product
   return (
     <div
-      className='card shadow-xl w-60 min-[375px]:w-64 min-[425px]:w-72 xl:w-80 lg:h-fit border-2 transition-colors pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
+      className='card shadow-xl w-60 min-[375px]:w-64 min-[425px]:w-72 xl:w-80 h-full lg:h-fit border-2 transition-colors pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
       key={id}
     >
       <Link
@@ -56,7 +56,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
 
         <button
           onClick={() => handleAddToCart(id)}
-          className={`btn-sm rounded-lg btn-active btn-accent  ${
+          className={`btn-sm rounded-lg btn-active btn-accent ${
             cartStatus.find((item: { id: string }) => item.id === id)?.quantity
               ? 'visible'
               : 'invisible'

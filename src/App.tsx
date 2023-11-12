@@ -10,7 +10,10 @@ const queryClient = new QueryClient()
 
 export type cartStatus = Array<{ id: string; quantity: number }>
 
-export const CartContext = createContext({})
+export const CartContext = createContext({
+  cartStatus: [{ id: '', quantity: 0 }],
+  setCartStatus: (currentItems) => {},
+})
 
 const App = () => {
   const [cartStatus, setCartStatus] = useState<cartStatus>([])

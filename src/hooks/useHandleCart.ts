@@ -2,9 +2,9 @@ import { CartContext, cartStatus } from '@/App'
 import { showCartToast } from '../components/CartToast'
 import { useContext } from 'react'
 
-export type cartItem = { id: string; quantity: number }
+export type cartItem = { id: string; quantity: number; price?: number }
 
-export const useHandleQuantity = () => {
+export const useHandleCart = () => {
   const { cartStatus, setCartStatus } = useContext(CartContext)
 
   const handleIncreaseQuantity = (id: string) => {
@@ -30,7 +30,7 @@ export const useHandleQuantity = () => {
       } else {
         return currentItems.map((item) => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity - 1 }
+            return { ...item, quantity: item.quantity > 0 && item.quantity - 1 }
           } else {
             return item
           }
