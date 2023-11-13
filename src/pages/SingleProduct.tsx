@@ -2,9 +2,9 @@ import { Product, Spinner } from '@/components'
 import { useGetSingleProduct } from '@/hooks/useGetSingleProduct'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BsArrowRightCircleFill } from 'react-icons/bs'
-import { Link, Params, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ProductInterface } from './AllProducts'
-import { useHandleCart } from '@/hooks/useHandleCart'
+import { cartItem, useHandleCart } from '@/hooks/useHandleCart'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
 
@@ -13,7 +13,7 @@ const SingleProduct = () => {
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
     useHandleCart()
   const { cartStatus } = useContext(CartContext)
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+
   const { id }: { id?: string } = useParams()
   const product = data?.data.product
   const relatedProducts = data?.data?.relatedProducts
@@ -99,7 +99,12 @@ const SingleProduct = () => {
           </div>
           <button
             onClick={() => handleAddToCart(id!)}
-            className='btn-md flex justify-center items-center rounded-lg w-fit btn-active btn-accent mt-4 p-4 m-auto sm:m-0'
+            className={`btn-md flex ${
+              cartStatus.find((item: { id: string }) => item.id === id)
+                ?.quantity
+                ? 'visible'
+                : 'invisible'
+            } justify-center items-center rounded-lg w-fit btn-active btn-accent mt-4 p-4 m-auto sm:m-0 hover:bg-cyan-700 transition-colors duration-300`}
           >
             Add To Cart
           </button>

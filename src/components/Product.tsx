@@ -8,7 +8,7 @@ import { useHandleCart } from '@/hooks/useHandleCart'
 type cartItem = { id: string; quantity: number }
 
 const Product = ({ product }: { product: ProductInterface }) => {
-  const { cartStatus, setCartStatus } = useContext(CartContext)
+  const { cartStatus } = useContext(CartContext)
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
     useHandleCart()
 
@@ -21,6 +21,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
       key={id}
     >
       <Link
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         to={`/products/product/${id}`}
         className='p-4 cursor-pointer tooltip tooltip-info flex justify-center items-center'
         data-tip='View details'

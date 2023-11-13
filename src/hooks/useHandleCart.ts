@@ -25,12 +25,15 @@ export const useHandleCart = () => {
 
   const handleDecreaseQuantity = (id: string) => {
     setCartStatus((currentItems: cartStatus) => {
-      if (currentItems.find((item) => item.id === id)?.quantity === 1) {
+      if (currentItems.find((item) => item.id === id)!.quantity <= 1) {
         return currentItems.filter((item) => item.id !== id)
       } else {
         return currentItems.map((item) => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity > 0 && item.quantity - 1 }
+            return {
+              ...item,
+              quantity: item.quantity - 1,
+            }
           } else {
             return item
           }
@@ -57,6 +60,8 @@ export const useHandleCart = () => {
       }
       // set cart in session storage
     })
+
+    console.log(cartStatus)
     sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
 
     // resetting the item state

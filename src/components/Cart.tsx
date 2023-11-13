@@ -30,6 +30,9 @@ const Cart = () => {
   const { cartStatus } = useContext(CartContext)
   const [tempCartData, setTempCartData] = useState([])
 
+  // console.log(tempCartData)
+
+  // get temporary cart data
   const getTempCartData = useCallback(() => {
     const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
     if (isLoading || !data) {
@@ -48,6 +51,8 @@ const Cart = () => {
     return tempCart
   }, [data, isLoading])
 
+  console.log(tempCartData)
+
   useEffect(() => {
     setTempCartData(getTempCartData())
   }, [getTempCartData, cartStatus])
@@ -58,7 +63,6 @@ const Cart = () => {
     id: string
   ) => {
     const target = e.currentTarget as HTMLButtonElement
-    console.log(target.value, id)
     // get the cart from session storage or an empty array if there is none
     const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
     // check if item exist
@@ -79,24 +83,38 @@ const Cart = () => {
       }
     })
     const tempCart =
-      data?.data.filter((item1: ProductInterface) =>
-        anonCart.some((item2: cartItem) => item2.id === item1._id)
+      data?.data.filter(
+        (item1: ProductInterface) =>
+          anonCart.some((item2: cartItem) => item2.id === item1._id) &&
+          item1.quantity !== 0
       ) || []
+
+    console.log(tempCart)
 
     tempCart.map((item1: ProductInterface) =>
       anonCart.map((item2: cartItem) => {
         if (item1._id === item2.id) item1.quantity = Number(item2.quantity)
       })
     )
-    setTempCartData(tempCart)
-    sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
+    // if quantity becomes 0, remove it
+    setTempCartData(tempCart.filter((item: cartItem) => item.quantity !== 0))
+    sessionStorage.setItem(
+      'anonCart',
+      JSON.stringify(anonCart.filter((item: cartItem) => item.quantity !== 0))
+    )
   }
 
   return (
     <aside>
       <Sheet>
-        <SheetTrigger className='text-3xl flex justify-center'>
+        <SheetTrigger className='text-3xl flex justify-center relative'>
           <AiOutlineShoppingCart />
+          <div
+            className='absolute bg-red-500 rounded-full p-2 h-2 top-0 text-xs left-4
+            flex justify-center items-center text-white w-fit'
+          >
+            {tempCartData.length}
+          </div>
         </SheetTrigger>
         <SheetContent className='overflow-y-scroll'>
           <SheetHeader>
