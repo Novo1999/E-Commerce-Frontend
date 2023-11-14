@@ -61,7 +61,6 @@ export const useHandleCart = () => {
       // set cart in session storage
     })
 
-    console.log(cartStatus)
     sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
 
     // resetting the item state

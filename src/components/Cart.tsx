@@ -24,6 +24,10 @@ import {
 } from '@/components/ui/table'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { CartContext } from '@/App'
+import { Trash2 } from 'lucide-react'
+import { Button } from './ui/button'
+import { BsFillCartFill } from 'react-icons/bs'
+import { Link } from 'react-router-dom'
 
 const Cart = () => {
   const { data, isLoading } = useGetAllProducts('a-z', 0, 0)
@@ -50,8 +54,6 @@ const Cart = () => {
     )
     return tempCart
   }, [data, isLoading])
-
-  console.log(tempCartData)
 
   useEffect(() => {
     setTempCartData(getTempCartData())
@@ -89,8 +91,6 @@ const Cart = () => {
           item1.quantity !== 0
       ) || []
 
-    console.log(tempCart)
-
     tempCart.map((item1: ProductInterface) =>
       anonCart.map((item2: cartItem) => {
         if (item1._id === item2.id) item1.quantity = Number(item2.quantity)
@@ -102,6 +102,17 @@ const Cart = () => {
       'anonCart',
       JSON.stringify(anonCart.filter((item: cartItem) => item.quantity !== 0))
     )
+  }
+
+  const handleDeleteItem = (id: string) => {
+    let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
+    anonCart = anonCart.filter((item: cartItem) => item.id !== id)
+    let updatedData = [...tempCartData] || []
+    updatedData = updatedData.filter(
+      (item: ProductInterface) => item._id !== id
+    )
+    sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
+    setTempCartData(updatedData)
   }
 
   return (
@@ -120,55 +131,95 @@ const Cart = () => {
           <SheetHeader>
             <SheetTitle>Cart</SheetTitle>
             <Table>
-              <TableCaption>
-                Total:{' '}
-                {tempCartData.reduce((acc: number, cur: cartItem) => {
-                  const total = acc + cur.price! * cur.quantity
-                  return Number(total.toFixed(2))
-                }, 0)}
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className='w-fit'>Image</TableHead>
-                  <TableHead className='w-fit'>Product</TableHead>
-                  <TableHead>Quantity</TableHead>
-                  <TableHead className='text-right'>Price</TableHead>
-                </TableRow>
-              </TableHeader>
+              {tempCartData.length > 0 ? (
+                <TableCaption>
+                  Total: $
+                  {tempCartData.reduce((acc: number, cur: cartItem) => {
+                    const total = acc + cur.price! * cur.quantity
+                    return Number(total.toFixed(2))
+                  }, 0)}
+                </TableCaption>
+              ) : (
+                <TableCaption className='flex items-center flex-col gap-4 '>
+                  <span
+                    className='flex justify-center
+                      items-center gap-1'
+                  >
+                    Your <BsFillCartFill /> Cart is Empty
+                  </span>
+                  <>
+                    <Link
+                      className='w-fit hover:bg-slate-400 hover:text-white bg-slate-200 p-3 rounded-xl duration-300'
+                      to='/all-products'
+                    >
+                      <SheetTrigger>
+                        <span className='p-3'>Shop Now</span>
+                      </SheetTrigger>
+                    </Link>
+                  </>
+                </TableCaption>
+              )}
+              {tempCartData.length > 0 && (
+                <TableHeader>
+                  <TableRow className='flex gap-20'>
+                    <TableHead className='w-fit'>Product</TableHead>
+                    <TableHead className='text-right'>Price</TableHead>
+                  </TableRow>
+                </TableHeader>
+              )}
               <TableBody>
                 {tempCartData.map((item: ProductInterface) => {
                   return (
                     item.quantity! > 0 && (
-                      <TableRow key={item._id}>
-                        <TableCell>
-                          <img src={item.link} alt='item image' />
+                      <TableRow
+                        key={item._id}
+                        className='flex justify-between items-center border-0'
+                      >
+                        <TableCell className='flex flex-col gap-2'>
+                          <img
+                            className='w-14'
+                            src={item.link}
+                            alt='item image'
+                          />
+                          {item.name}
+                          <div className='flex gap-2'>
+                            <button
+                              onClick={(e) => {
+                                updateCartItemQuantity(e, item._id)
+                              }}
+                              value='minus'
+                              className='btn-xs btn-warning rounded-full hover:bg-yellow-400 duration-300'
+                            >
+                              <AiOutlineMinus />
+                            </button>
+                            <button
+                              value='minus'
+                              className='btn-xs rounded-full cursor-context-menu bg-black text-white font-semibold'
+                            >
+                              {item.quantity}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                updateCartItemQuantity(e, item._id)
+                              }}
+                              value='plus'
+                              className='btn-xs  rounded-full btn-warning hover:bg-yellow-400 duration-300'
+                            >
+                              <AiOutlinePlus />
+                            </button>
+                          </div>
                         </TableCell>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell className='flex gap-2'>
-                          <button
-                            onClick={(e) => {
-                              updateCartItemQuantity(e, item._id)
-                            }}
-                            value='minus'
-                            className='btn-sm btn-warning rounded-full hover:bg-yellow-400 duration-300'
+                        <TableCell className='gap-2 space-x-4'>
+                          <span>
+                            ${(Number(item.price) * item.quantity!).toFixed(2)}
+                          </span>
+                          <Button
+                            onClick={() => handleDeleteItem(item._id)}
+                            variant='outline'
+                            size='icon'
                           >
-                            <AiOutlineMinus />
-                          </button>
-                          <kbd className='kbd rounded-full text-white h-fit w-fit'>
-                            {item.quantity}
-                          </kbd>
-                          <button
-                            onClick={(e) => {
-                              updateCartItemQuantity(e, item._id)
-                            }}
-                            value='plus'
-                            className='btn-sm  rounded-full btn-warning hover:bg-yellow-400 duration-300'
-                          >
-                            <AiOutlinePlus />
-                          </button>
-                        </TableCell>
-                        <TableCell>
-                          {(Number(item.price) * item.quantity!).toFixed(2)}
+                            <Trash2 className='h-4 w-4' />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     )
