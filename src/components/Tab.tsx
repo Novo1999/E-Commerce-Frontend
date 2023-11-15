@@ -1,15 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
+
 import { useEffect, useState } from 'react'
+import { Login, Register } from '.'
 
 const Tab = () => {
   const [isTabContentOpen, setIsTabContentOpen] = useState(false)
@@ -50,69 +42,3 @@ const Tab = () => {
   )
 }
 export default Tab
-
-export const Register = ({ on }: { on?: string }) => {
-  return (
-    <Card
-      className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72 sm:w-96 top-80' : 'right-20 top-16'
-      } `}
-    >
-      <CardHeader>
-        <CardTitle>Register Now</CardTitle>
-        <CardDescription>Quickly Open an account</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {/* FORM */}
-        <form>
-          <div className='grid w-full items-center gap-4'>
-            <div className='flex flex-col space-y-1.5'>
-              <Label htmlFor='Name'>Name</Label>
-              <Input name='name' id='Name' placeholder='Name' />
-            </div>
-            <div className='flex flex-col space-y-1.5'>
-              <Label htmlFor='Email'>Email</Label>
-              <Input name='email' placeholder='Email' />
-            </div>
-            <div className='flex flex-col space-y-1.5'>
-              <Label htmlFor='Password'>Password</Label>
-              <Input name='password' type='password' placeholder='Password' />
-            </div>
-            {/* BUTTON */}
-            <Button>Submit</Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}
-
-export const Login = ({ on }: { on?: string }) => {
-  return (
-    <Card
-      className={`absolute w-72 ${
-        on === 'mobile' ? 'w-72  sm:w-96 top-80' : 'right-20 top-16'
-      } `}
-    >
-      <CardHeader>
-        <CardTitle>Log In</CardTitle>
-        <CardDescription>Log in to your account</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className='grid w-full items-center gap-4'>
-            <div className='flex flex-col space-y-1.5'>
-              <Label htmlFor='Email'>Email</Label>
-              <Input name='email' placeholder='Email' />
-            </div>
-            <div className='flex flex-col space-y-1.5'>
-              <Label htmlFor='Password'>Password</Label>
-              <Input name='password' type='password' placeholder='Password' />
-            </div>
-            <Button>Submit</Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}

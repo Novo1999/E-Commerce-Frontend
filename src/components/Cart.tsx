@@ -22,19 +22,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { CartContext } from '@/App'
 import { Trash2 } from 'lucide-react'
 import { Button } from './ui/button'
 import { BsFillCartFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
+import { useGetCart } from '@/hooks/useGetCart'
 
 const Cart = () => {
   const { data, isLoading } = useGetAllProducts('a-z', 0, 0)
-  const { cartStatus } = useContext(CartContext)
-  const [tempCartData, setTempCartData] = useState([])
-
-  // console.log(tempCartData)
+  const { cartStatus, tempCartData, setTempCartData } = useContext(CartContext)
+  const { data: userCart } = useGetCart()
+  console.log(userCart)
 
   // get temporary cart data
   const getTempCartData = useCallback(() => {
@@ -53,11 +53,11 @@ const Cart = () => {
       })
     )
     return tempCart
-  }, [data, isLoading])
+  }, [data, isLoading, setTempCartData])
 
   useEffect(() => {
     setTempCartData(getTempCartData())
-  }, [getTempCartData, cartStatus])
+  }, [getTempCartData, cartStatus, setTempCartData])
 
   // updating the item quantities from the cart
   const updateCartItemQuantity = (
@@ -108,9 +108,7 @@ const Cart = () => {
     let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
     anonCart = anonCart.filter((item: cartItem) => item.id !== id)
     let updatedData = [...tempCartData] || []
-    updatedData = updatedData.filter(
-      (item: ProductInterface) => item._id !== id
-    )
+    updatedData = updatedData.filter((item: cartItem) => item._id !== id)
     sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
     setTempCartData(updatedData)
   }
@@ -135,7 +133,7 @@ const Cart = () => {
                 <TableCaption>
                   Total: $
                   {tempCartData.reduce((acc: number, cur: cartItem) => {
-                    const total = acc + cur.price! * cur.quantity
+                    const total = acc + cur.price! * cur.quantity!
                     return Number(total.toFixed(2))
                   }, 0)}
                 </TableCaption>
@@ -161,7 +159,7 @@ const Cart = () => {
               )}
               {tempCartData.length > 0 && (
                 <TableHeader>
-                  <TableRow className='flex gap-20'>
+                  <TableRow className='flex gap-28'>
                     <TableHead className='w-fit'>Product</TableHead>
                     <TableHead className='text-right'>Price</TableHead>
                   </TableRow>
@@ -234,3 +232,8 @@ const Cart = () => {
   )
 }
 export default Cart
+
+/* 
+When no user, product can be added to cart
+When logged in, product from temp cart will go to user cart(If user has a cart, push / replace / update, if no cart, create the cart with the temp data)
+*/

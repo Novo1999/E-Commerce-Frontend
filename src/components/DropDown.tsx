@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { GrClose } from 'react-icons/gr'
-import { Login, Register } from './Tab'
+import { Login, Register } from '.'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
