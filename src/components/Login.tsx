@@ -16,10 +16,12 @@ import customFetch from '@/utils/customFetch'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
 import { cartItem } from '@/hooks/useHandleCart'
+import { useQueryClient } from '@tanstack/react-query'
 
 const Login = ({ on }: { on?: string }) => {
   const { register, handleSubmit, reset } = useForm<AuthInputs>()
   const { tempCartData, setTempCartData } = useContext(CartContext)
+  const queryClient = useQueryClient()
 
   const onSubmit: SubmitHandler<AuthInputs> = async (data) => {
     try {
@@ -28,16 +30,21 @@ const Login = ({ on }: { on?: string }) => {
       toast.success(user.data?.msg)
       // reset the form field
       reset()
+
       if (user && tempCartData.length > 0) {
-        tempCartData.map((item: cartItem) => {
-          const { name, _id: id, quantity, price } = item
-          return customFetch.post('/cart', {
+        for (const item of tempCartData) {
+          const { name, _id: id, quantity, price, link } = item as cartItem
+          const product = {
             name,
             productId: id,
             quantity,
-            price: (quantity! * price!).toFixed(2),
-          })
-        })
+            price: Number(quantity! * price!).toFixed(2),
+            link,
+          }
+          // Send each product individually to the server
+          await customFetch.post('/cart', product)
+          queryClient.invalidateQueries({ queryKey: ['user'] })
+        }
       }
       return user
     } catch (error) {

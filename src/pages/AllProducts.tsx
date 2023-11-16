@@ -30,6 +30,7 @@ export interface ProductInterface {
   description: string
   link: string
   quantity?: number
+  productId?: string
 }
 
 const AllProducts = () => {

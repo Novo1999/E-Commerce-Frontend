@@ -5,7 +5,6 @@ import toast from 'react-hot-toast'
 export const getUserCart = async () => {
   try {
     const userCart = await customFetch.get('/current-user')
-    console.log(userCart)
     return userCart
   } catch (error) {
     toast.error('Something went wrong getting cart')
@@ -15,7 +14,7 @@ export const getUserCart = async () => {
 
 export const useGetCart = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ['user-cart'],
+    queryKey: ['user'],
     queryFn: () => getUserCart(),
   })
   return { data, isLoading }
