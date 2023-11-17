@@ -31,7 +31,6 @@ import { Link } from 'react-router-dom'
 import { useGetCart } from '@/hooks/useGetCart'
 import customFetch from '@/utils/customFetch'
 import { useIsFetching, useQueryClient } from '@tanstack/react-query'
-import { Spinner } from '.'
 
 export type UserCart = {
   data: {
@@ -50,6 +49,8 @@ const Cart = () => {
   const queryClient = useQueryClient()
   const isFetching = useIsFetching()
   const onlineCart = (userCart as UserCart)?.data?.cart[0]?.products
+  const userExist = (userCart as UserCart)?.data?.currentUser?.email
+
   // get temporary cart data
   const getTempCartData = useCallback(() => {
     const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
@@ -85,7 +86,7 @@ const Cart = () => {
   ) => {
     const target = e.currentTarget as HTMLButtonElement
     // if user not logged in use session storage
-    if (!(userCart as UserCart)?.data?.currentUser?.email) {
+    if (!userExist) {
       // get the cart from session storage or an empty array if there is none
       const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       // check if item exist
@@ -147,8 +148,8 @@ const Cart = () => {
 
   // delete
   const handleDeleteItem = async (id: string) => {
-    // if user is not logged in, use the session storage as a temporary cart
-    if (!(userCart as UserCart)?.data?.currentUser?.email) {
+    // if user is not logged in, delete from session storage
+    if (!userExist) {
       let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       anonCart = anonCart.filter((item: cartItem) => item.id !== id)
       let updatedData = [...tempCartData] || []
@@ -156,7 +157,7 @@ const Cart = () => {
       sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
       setTempCartData(updatedData)
     } else {
-      // if user is logged in, use online user cart
+      // if user is logged in, delete from online cart
       setCurrentUpdating(id)
 
       const quantity = 0
@@ -184,7 +185,7 @@ const Cart = () => {
             {tempCartData.length}
           </div>
         </SheetTrigger>
-        <SheetContent className='overflow-y-scroll'>
+        <SheetContent className='overflow-y-scroll w-screen'>
           <SheetHeader>
             <SheetTitle>Cart</SheetTitle>
             <Table>
@@ -196,6 +197,7 @@ const Cart = () => {
                   </TableRow>
                 </TableBody>
               ) : tempCartData.length > 0 ? (
+                // Total Price
                 <TableCaption>
                   Total: $
                   {tempCartData.reduce((acc: number, cur: cartItem) => {
@@ -224,9 +226,12 @@ const Cart = () => {
                 </TableCaption>
               )}
               {tempCartData.length > 0 && (
+                // Header
                 <TableHeader>
-                  <TableRow className='flex gap-28'>
-                    <TableHead className='w-fit'>Product</TableHead>
+                  <TableRow className='flex justify-between px-2'>
+                    <TableHead className='w-fit relative left-4 sm:left-10'>
+                      Product
+                    </TableHead>
                     <TableHead className='text-right'>Price</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -243,10 +248,19 @@ const Cart = () => {
                         key={productId}
                         className='flex justify-between items-center border-0'
                       >
-                        <TableCell className='flex flex-col gap-2'>
-                          <img className='w-14' src={link} alt='item image' />
-                          {name}
+                        <TableCell className='flex flex-col gap-2 items-center'>
+                          {/* item image */}
+                          <img
+                            className='w-14 m-auto'
+                            src={link}
+                            alt='item image'
+                          />
+                          <span className='text-xs w-20 min-[425px]:text-sm sm:text-base text-center sm:w-36'>
+                            {name}
+                          </span>
+                          {/* item quantity buttons */}
                           <div className='flex gap-2'>
+                            {/* minus */}
                             <button
                               disabled={
                                 isUpdating ||
@@ -265,18 +279,20 @@ const Cart = () => {
                             >
                               <AiOutlineMinus />
                             </button>
-
                             <button
                               value='minus'
-                              className='btn-xs rounded-full cursor-context-menu bg-black text-white font-semibold flex justify-center items-center'
+                              className={`btn-xs rounded-full cursor-context-menu bg-black ${
+                                quantity!.toString().length > 2 ? 'w-7' : 'w-6'
+                              } text-white font-semibold flex justify-center items-center`}
                             >
+                              {/* quantity */}
                               {isUpdating && currentUpdating === productId ? (
                                 <span className='loading loading-spinner text-white w-3 h-3'></span>
                               ) : (
                                 quantity
                               )}
                             </button>
-
+                            {/* plus */}
                             <button
                               disabled={
                                 isUpdating ||
@@ -297,15 +313,22 @@ const Cart = () => {
                             </button>
                           </div>
                         </TableCell>
-                        <TableCell className='gap-2 space-x-4'>
+                        {/* price and delete button */}
+                        <TableCell className='flex justify-between flex-col gap-2 items-center'>
                           <span>${price?.toFixed(2)}</span>
-                          <Button
-                            onClick={() => handleDeleteItem(productId!)}
-                            variant='outline'
-                            size='icon'
+                          <div
+                            className='tooltip tooltip-warning '
+                            data-tip='Delete'
                           >
-                            <Trash2 className='h-4 w-4' />
-                          </Button>
+                            <Button
+                              className='relative top-2'
+                              onClick={() => handleDeleteItem(productId!)}
+                              variant='outline'
+                              size='icon'
+                            >
+                              <Trash2 className='h-4 w-4' />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     )

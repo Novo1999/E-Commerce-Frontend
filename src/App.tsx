@@ -3,7 +3,7 @@ import { Outlet } from 'react-router'
 import { Navbar } from './components'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider } from './components/theme-provider'
+import { ThemeProvider } from './components/ThemeProvider'
 import { createContext, useState } from 'react'
 import { cartItem } from './hooks/useHandleCart'
 

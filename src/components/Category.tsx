@@ -36,7 +36,7 @@ const Category = () => {
   }
 
   return (
-    <section className='flex flex-col h-fit sm:h-[50rem] lg:w-[56rem] xl:w-[90rem] 2xl:w-[96rem]'>
+    <section className='flex flex-col h-fit sm:h-[50rem] lg:w-[56rem] xl:w-[90rem] 2xl:w-[96rem] category-section'>
       <div className='flex justify-between mx-4 xl:mx-20 text-sm items-center mt-6'>
         <h2 className='font-semibold sm:text-xl'>Shop by category</h2>
         <Select onValueChange={(value) => handleCategory(value)}>
@@ -62,8 +62,11 @@ const Category = () => {
               const { _id: id, brand, name, price, link } = product
               return (
                 <Link
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
                   to={`/products/product/${id}`}
-                  className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group'
+                  className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group w-72 min-[425px]:w-80 lg:w-full'
                   key={id}
                 >
                   <div className='absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 bg-slate-400 py-2 text-white w-full text-center'>

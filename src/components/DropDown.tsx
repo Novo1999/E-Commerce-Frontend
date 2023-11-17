@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { GrClose } from 'react-icons/gr'
-import { Login, Register } from '.'
+import { Cart, Login, Register } from '.'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -22,6 +22,7 @@ const DropDown = ({
   setIsHamburgerMenuOpen,
 }: DropDownProps) => {
   const [currentOpen, setCurrentOpen] = useState('')
+
   return (
     <div className='text-2xl md:hidden p-1'>
       <DropdownMenu
@@ -63,7 +64,12 @@ const DropDown = ({
           >
             Login
           </DropdownMenuLabel>
-          <DropdownMenuLabel className='text-2xl'>Cart</DropdownMenuLabel>
+          <DropdownMenuLabel
+            onClick={() => setCurrentOpen('')}
+            className='text-2xl flex items-center gap-1'
+          >
+            <Cart />
+          </DropdownMenuLabel>
           {currentOpen === 'register' && <Register on='mobile' />}
           {currentOpen === 'login' && <Login on='mobile' />}
         </DropdownMenuContent>

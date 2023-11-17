@@ -36,7 +36,7 @@ const Contact = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         className='w-fit sm:w-60'

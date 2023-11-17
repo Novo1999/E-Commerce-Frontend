@@ -26,11 +26,11 @@ const Login = ({ on }: { on?: string }) => {
   const onSubmit: SubmitHandler<AuthInputs> = async (data) => {
     try {
       const user = await customFetch.post('/auth/login', data)
-      console.log(user)
       toast.success(user.data?.msg)
       // reset the form field
       reset()
 
+      // adding product from temporary cart to online cart after logging in
       if (user && tempCartData.length > 0) {
         for (const item of tempCartData) {
           const { name, _id: id, quantity, price, link } = item as cartItem
@@ -43,9 +43,12 @@ const Login = ({ on }: { on?: string }) => {
           }
           // Send each product individually to the server
           await customFetch.post('/cart', product)
-          queryClient.invalidateQueries({ queryKey: ['user'] })
         }
       }
+      // invalidate after log in
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      sessionStorage.clear()
+      setTempCartData([])
       return user
     } catch (error) {
       if (error instanceof AxiosError)
