@@ -18,7 +18,7 @@ const logOut = async (queryClient: QueryClient) => {
     await customFetch.get('auth/logout')
     sessionStorage.clear()
     toast.success('Logged Out Successfully')
-    return queryClient.invalidateQueries({ queryKey: ['user'] })
+    queryClient.invalidateQueries({ queryKey: ['user'] })
   } catch (error) {
     toast.error('Something went wrong')
   }

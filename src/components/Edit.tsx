@@ -8,6 +8,10 @@ import { Dispatch, SetStateAction } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetCart } from '@/hooks/useGetCart'
 import { UserCart } from './Cart'
+import customFetch from '@/utils/customFetch'
+import toast from 'react-hot-toast'
+import { useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
 const formSchema = z.object({
   name: z
@@ -30,8 +34,8 @@ const Edit = ({
 }: {
   setIsEditing: Dispatch<SetStateAction<boolean>>
 }) => {
-  const { data, isLoading } = useGetCart()
-  console.log(isLoading)
+  const { data } = useGetCart()
+  const queryClient = useQueryClient()
   const name = (data as UserCart)?.data.currentUser?.name
   const email = (data as UserCart)?.data.currentUser?.email
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,11 +43,31 @@ const Edit = ({
     defaultValues: {
       name,
       email,
+      currentPassword: '',
+      newPassword: '',
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const {
+      name,
+      email,
+      currentPassword: oldPassword,
+      newPassword: password,
+    } = values
+    try {
+      await customFetch.patch('/user/edit', {
+        name,
+        email,
+        password,
+        oldPassword,
+      })
+      toast.success('User edited successfully')
+      setIsEditing(false)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    } catch (error) {
+      if (error instanceof AxiosError) toast.error(error?.response?.data?.msg)
+    }
   }
 
   return (
