@@ -4,11 +4,14 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import ErrorPage from './pages/Error.tsx'
 import App from './App.tsx'
+import { loader as ProfileLoader } from './pages/Profile.tsx'
+
 import {
   AllProducts,
   HomeLayout,
   SingleProduct,
   ProductByCategory,
+  Profile,
 } from './pages'
 
 const router = createBrowserRouter([
@@ -33,6 +36,11 @@ const router = createBrowserRouter([
       {
         path: '/products/product',
         element: <ProductByCategory />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+        loader: ProfileLoader,
       },
     ],
   },

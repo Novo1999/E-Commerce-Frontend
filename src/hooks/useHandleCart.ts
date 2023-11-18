@@ -44,8 +44,11 @@ export const useHandleCart = () => {
 
   const handleDecreaseQuantity = (id: string) => {
     setCartStatus((currentItems: cartStatus) => {
+      const currentItemQuantity = currentItems.find(
+        (item) => item.id === id
+      )?.quantity
       // fallback value
-      if (currentItems.find((item) => item.id === id)?.quantity ?? 0 <= 1) {
+      if (currentItemQuantity! <= 1) {
         return currentItems.filter((item) => item.id !== id)
       } else {
         return currentItems.map((item) => {

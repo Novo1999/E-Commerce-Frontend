@@ -34,14 +34,15 @@ import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 
 export type UserCart = {
   data: {
-    currentUser: { email: string }
+    currentUser: { email: string; name: string }
     cart: [{ products: cartItem }]
   }
 }
 
 const Cart = () => {
   const { data, isLoading } = useGetAllProducts('a-z', 0, 0)
-  const { cartStatus, tempCartData, setTempCartData } = useContext(CartContext)
+  const { cartStatus, tempCartData, setTempCartData, isAuthenticated } =
+    useContext(CartContext)
   const { data: userCart } = useGetCart()
   const [currentUpdating, setCurrentUpdating] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
@@ -49,7 +50,6 @@ const Cart = () => {
   const queryClient = useQueryClient()
   const isFetching = useIsFetching()
   const onlineCart = (userCart as UserCart)?.data?.cart[0]?.products
-  const userExist = (userCart as UserCart)?.data?.currentUser?.email
 
   // get temporary cart data
   const getTempCartData = useCallback(() => {
@@ -86,7 +86,7 @@ const Cart = () => {
   ) => {
     const target = e.currentTarget as HTMLButtonElement
     // if user not logged in use session storage
-    if (!userExist) {
+    if (!isAuthenticated) {
       // get the cart from session storage or an empty array if there is none
       const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       // check if item exist
@@ -149,7 +149,7 @@ const Cart = () => {
   // delete
   const handleDeleteItem = async (id: string) => {
     // if user is not logged in, delete from session storage
-    if (!userExist) {
+    if (!isAuthenticated) {
       let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       anonCart = anonCart.filter((item: cartItem) => item.id !== id)
       let updatedData = [...tempCartData] || []
@@ -182,7 +182,7 @@ const Cart = () => {
             className='absolute bg-red-500 rounded-full p-2 h-2 top-0 text-xs left-4
             flex justify-center items-center text-white w-fit'
           >
-            {tempCartData.length}
+            {tempCartData?.length}
           </div>
         </SheetTrigger>
         <SheetContent className='overflow-y-scroll w-screen'>
@@ -196,7 +196,7 @@ const Cart = () => {
                     <td className='loading loading-ring loading-lg top-0 right-0 left-0 bottom-0 m-auto absolute'></td>
                   </TableRow>
                 </TableBody>
-              ) : tempCartData.length > 0 ? (
+              ) : tempCartData?.length > 0 ? (
                 // Total Price
                 <TableCaption>
                   Total: $
@@ -225,7 +225,7 @@ const Cart = () => {
                   </>
                 </TableCaption>
               )}
-              {tempCartData.length > 0 && (
+              {tempCartData?.length > 0 && (
                 // Header
                 <TableHeader>
                   <TableRow className='flex justify-between px-2'>
@@ -238,7 +238,7 @@ const Cart = () => {
               )}
 
               <TableBody>
-                {tempCartData.map((item: cartItem) => {
+                {tempCartData?.map((item: cartItem) => {
                   const { name, quantity, link, price } = item
                   const productId = item.productId || item._id
 

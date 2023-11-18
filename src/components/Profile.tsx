@@ -9,7 +9,6 @@ const Profile = () => {
         <ProfileDropdown>
           <CgProfile className='text-3xl' />
         </ProfileDropdown>
-
         <Cart />
       </div>
       <ModeToggle />

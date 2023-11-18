@@ -16,16 +16,26 @@ export const CartContext = createContext({
   setCartStatus: (currentItems) => {},
   tempCartData: [{}],
   setTempCartData: (currentItems) => {},
+  isAuthenticated: false,
+  setIsAuthenticated: (isAuthenticated) => {},
 })
 
 const App = () => {
   const [cartStatus, setCartStatus] = useState<cartStatus>([])
   const [tempCartData, setTempCartData] = useState<Array<cartItem>>([])
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   return (
     <QueryClientProvider client={queryClient}>
       <CartContext.Provider
-        value={{ cartStatus, setCartStatus, tempCartData, setTempCartData }}
+        value={{
+          cartStatus,
+          setCartStatus,
+          tempCartData,
+          setTempCartData,
+          isAuthenticated,
+          setIsAuthenticated,
+        }}
       >
         <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
           <Toaster />
