@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Logo, DropDown, Tab, Navlinks, Profile } from '.'
+import { ModeToggle } from './ModeToggle'
 
 const Navbar = () => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false)
@@ -33,10 +34,15 @@ const Navbar = () => {
       } xl:gap-40`}
     >
       <Logo />
-      <DropDown
-        isHamburgerMenuOpen={isHamburgerMenuOpen}
-        setIsHamburgerMenuOpen={setIsHamburgerMenuOpen}
-      />
+      <div className='flex justify-center items-center gap-2'>
+        <span className='visible sm:hidden'>
+          <ModeToggle />
+        </span>
+        <DropDown
+          isHamburgerMenuOpen={isHamburgerMenuOpen}
+          setIsHamburgerMenuOpen={setIsHamburgerMenuOpen}
+        />
+      </div>
       <div className='md:flex items-center gap-2 hidden'>
         <Navlinks />
         <Tab />

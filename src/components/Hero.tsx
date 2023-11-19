@@ -9,7 +9,7 @@ const slides = [
 
 const Hero = () => {
   return (
-    <div className=''>
+    <div>
       <Carousel>
         {slides.map((src: string, index) => {
           return (
