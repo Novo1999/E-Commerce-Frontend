@@ -7,7 +7,7 @@ import { UserCart } from './Cart'
 const Profile = () => {
   const { data: userCart } = useGetCart()
   const avatar = (userCart as UserCart)?.data?.currentUser?.avatar
-  const name = (userCart as UserCart)?.data.currentUser?.name || ''
+  const name = (userCart as UserCart)?.data?.currentUser?.name || ''
 
   return (
     <div className='absolute flex items-center gap-4 text-black right-0 sm:right-3 sm:gap-2 lg:gap-4 lg:right-6 xl:relative'>
