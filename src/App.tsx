@@ -4,23 +4,30 @@ import { Navbar } from './components'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from './components/ThemeProvider'
-import { createContext, useState } from 'react'
-import { cartItem } from './hooks/useHandleCart'
+import { Dispatch, SetStateAction, createContext, useState } from 'react'
+import { CartItem } from './hooks/useHandleCart'
 
 const queryClient = new QueryClient()
 
-export type cartStatus = Array<{ id: string; quantity: number }>
+export type CartStatus = Array<{ id: string; quantity: number }>
 
-export const CartContext = createContext({
+interface CartContextProps {
+  cartStatus: CartStatus
+  setCartStatus: Dispatch<SetStateAction<CartStatus>>
+  tempCartData: Array<CartItem>
+  setTempCartData: Dispatch<SetStateAction<Array<CartItem>>>
+}
+
+export const CartContext = createContext<CartContextProps>({
   cartStatus: [{ id: '', quantity: 0 }],
-  setCartStatus: (currentItems) => {},
+  setCartStatus: () => {},
   tempCartData: [{}],
-  setTempCartData: (currentItems) => {},
+  setTempCartData: () => {},
 })
 
 const App = () => {
-  const [cartStatus, setCartStatus] = useState<cartStatus>([])
-  const [tempCartData, setTempCartData] = useState<Array<cartItem>>([])
+  const [cartStatus, setCartStatus] = useState<CartStatus>([])
+  const [tempCartData, setTempCartData] = useState<Array<CartItem>>([])
 
   return (
     <QueryClientProvider client={queryClient}>

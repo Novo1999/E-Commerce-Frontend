@@ -1,4 +1,4 @@
-import { CartContext, cartStatus } from '@/App'
+import { CartContext, CartStatus } from '@/App'
 import { showCartToast } from '../components/CartToast'
 import { useContext } from 'react'
 import { useGetCart } from './useGetCart'
@@ -7,8 +7,8 @@ import customFetch from '@/utils/customFetch'
 import { useQueryClient } from '@tanstack/react-query'
 import { useGetAllProducts } from './useGetAllProducts'
 
-export type cartItem = {
-  id?: string
+export type CartItem = {
+  id?: string | undefined
   productId?: string
   quantity?: number
   price?: number
@@ -23,17 +23,17 @@ export const useHandleCart = () => {
   const { data } = useGetAllProducts('a-z', 0, 0)
   const { data: userCart } = useGetCart()
   const onlineCart = (userCart as UserCart)?.data?.cart[0]
-    ?.products as cartItem[]
+    ?.products as CartItem[]
   const queryClient = useQueryClient()
 
   const handleIncreaseQuantity = (id: string) => {
-    setCartStatus((currentItems: cartStatus) => {
+    setCartStatus((currentItems: CartStatus) => {
       if (!currentItems.find((item) => item.id === id)) {
         return [...currentItems, { id, quantity: 1 }]
       } else {
         return currentItems.map((item) => {
           if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1 }
+            return { ...item, quantity: item.quantity! + 1 }
           } else {
             return item
           }
@@ -43,7 +43,7 @@ export const useHandleCart = () => {
   }
 
   const handleDecreaseQuantity = (id: string) => {
-    setCartStatus((currentItems: cartStatus) => {
+    setCartStatus((currentItems) => {
       const currentItemQuantity = currentItems.find(
         (item) => item.id === id
       )?.quantity
@@ -55,7 +55,7 @@ export const useHandleCart = () => {
           if (item.id === id) {
             return {
               ...item,
-              quantity: item.quantity >= 1 && item.quantity - 1,
+              quantity: item.quantity! >= 1 ? item.quantity! - 1 : 0,
             }
           } else {
             return item
@@ -71,16 +71,16 @@ export const useHandleCart = () => {
       // get the cart from session storage or an empty array if there is none
       const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       // check if item exist
-      const existingItem = anonCart.find((item: cartItem) => item.id === id)
+      const existingItem = anonCart.find((item: CartItem) => item.id === id)
 
       // if item exists, update its quantity only
-      cartStatus.filter((cartItem: cartItem) => {
-        if (cartItem.id === id && existingItem) {
-          existingItem.quantity += cartItem.quantity
+      cartStatus.filter((CartItem: CartItem) => {
+        if (CartItem.id === id && existingItem) {
+          existingItem.quantity += CartItem.quantity
         }
         // if item does not exist but id matches, add it to the cart
-        if (cartItem.id === id && !existingItem) {
-          anonCart.push(cartItem)
+        if (CartItem.id === id && !existingItem) {
+          anonCart.push(CartItem)
         }
         // set cart in session storage
       })
@@ -88,7 +88,7 @@ export const useHandleCart = () => {
       sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
 
       // resetting the item state
-      setCartStatus((currentItems: cartStatus) => {
+      setCartStatus((currentItems: CartStatus) => {
         return currentItems.map((item) => {
           if (item.id === id) {
             return { ...item, quantity: 0 }
@@ -101,7 +101,7 @@ export const useHandleCart = () => {
     } else {
       // when user logs in use the online cart
       const existingItem = onlineCart?.find(
-        (item: cartItem) => item.productId === id
+        (item: CartItem) => item.productId === id
       )
 
       // if item exists
@@ -109,7 +109,7 @@ export const useHandleCart = () => {
         const { productId } = existingItem
         // get price of existing item
         const price = data?.data.find(
-          (item: cartItem) => item._id === productId
+          (item: CartItem) => item._id === productId
         ).price
         // get quantity of items added
         const quantity = cartStatus.find(
@@ -122,7 +122,7 @@ export const useHandleCart = () => {
         })
         // if item does not exist
       } else {
-        const newItem = data?.data.find((item: cartItem) => item._id === id)
+        const newItem = data?.data.find((item: CartItem) => item._id === id)
         const { _id: productId, price, link, name } = newItem
         const quantity = cartStatus.find(
           (item) => item.id === productId
@@ -135,7 +135,7 @@ export const useHandleCart = () => {
           link,
         })
       }
-      setCartStatus((currentItems: cartStatus) => {
+      setCartStatus((currentItems: CartStatus) => {
         return currentItems.map((item) => {
           if (item.id === id) {
             return { ...item, quantity: 0 }

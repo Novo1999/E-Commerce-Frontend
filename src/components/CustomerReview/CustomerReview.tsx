@@ -1,10 +1,24 @@
-import { useCallback, useEffect, useReducer } from 'react'
+import { useReducer } from 'react'
 import Stars from './Stars'
 import { reviews } from './ReviewsData'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
+interface State {
+  currentReviewIndex: number
+  curClicked: string
+  applyClass: boolean
+  applyClass2: boolean
+  btnDisabled: boolean
+}
+
+type Action =
+  | { type: 'button/disabled'; payload: boolean }
+  | { type: 'clicked/current'; payload: string }
+  | { type: 'reviews/current'; payload: number }
+
 const initialState = {
   currentReviewIndex: 0,
   curClicked: '',
@@ -13,7 +27,7 @@ const initialState = {
   btnDisabled: false,
 }
 
-function reducer(state, action) {
+function reducer(state: State, action: Action) {
   switch (action.type) {
     case 'button/disabled':
       return { ...state, btnDisabled: action.payload }

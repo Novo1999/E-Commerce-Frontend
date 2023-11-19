@@ -15,7 +15,7 @@ import { AuthInputs } from './Register'
 import customFetch from '@/utils/customFetch'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
-import { cartItem } from '@/hooks/useHandleCart'
+import { CartItem } from '@/hooks/useHandleCart'
 import { useQueryClient } from '@tanstack/react-query'
 
 const Login = ({ on }: { on?: string }) => {
@@ -33,7 +33,7 @@ const Login = ({ on }: { on?: string }) => {
       // adding product from temporary cart to online cart after logging in
       if (user && tempCartData.length > 0) {
         for (const item of tempCartData) {
-          const { name, _id: id, quantity, price, link } = item as cartItem
+          const { name, _id: id, quantity, price, link } = item as CartItem
           const product = {
             name,
             productId: id,

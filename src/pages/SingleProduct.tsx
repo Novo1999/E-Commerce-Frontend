@@ -4,7 +4,7 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { BsArrowRightCircleFill } from 'react-icons/bs'
 import { Link, useParams } from 'react-router-dom'
 import { ProductInterface } from './AllProducts'
-import { cartItem, useHandleCart } from '@/hooks/useHandleCart'
+import { CartItem, useHandleCart } from '@/hooks/useHandleCart'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
 
@@ -87,7 +87,7 @@ const SingleProduct = () => {
               <AiOutlineMinus />
             </button>
             <kbd className='kbd text-white h-full w-fit'>
-              {cartStatus.find((item: cartItem) => item.id === id)?.quantity ||
+              {cartStatus.find((item: CartItem) => item.id === id)?.quantity ||
                 0}
             </kbd>
             <button

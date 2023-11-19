@@ -18,6 +18,9 @@ import { Input } from '@/components/ui/input'
 const Contact = () => {
   const form = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: '',
+    },
   })
 
   // 2. Define a submit handler.

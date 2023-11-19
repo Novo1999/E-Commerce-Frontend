@@ -5,7 +5,7 @@ import { ProductInterface } from './AllProducts'
 import { Product, Spinner } from '@/components'
 
 const ProductByCategory = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const urlCategory = searchParams.get('category')
 
   const { data, isLoading } = useGetProductByCategory(urlCategory!)

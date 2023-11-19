@@ -6,7 +6,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { useGetAllProducts } from '@/hooks/useGetAllProducts'
-import { cartItem } from '@/hooks/useHandleCart'
+import { CartItem } from '@/hooks/useHandleCart'
 import { ProductInterface } from '@/pages/AllProducts'
 import {
   AiOutlineMinus,
@@ -22,7 +22,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import {
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { CartContext } from '@/App'
 import { Trash2 } from 'lucide-react'
 import { Button } from './ui/button'
@@ -35,7 +41,7 @@ import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 export type UserCart = {
   data: {
     currentUser: { email: string; name: string; avatar: string }
-    cart: [{ products: cartItem }]
+    cart: [{ products: CartItem }]
   }
 }
 
@@ -59,11 +65,11 @@ const Cart = () => {
     }
     const tempCart =
       data?.data.filter((item1: ProductInterface) =>
-        anonCart.some((item2: cartItem) => item2.id === item1._id)
+        anonCart.some((item2: CartItem) => item2.id === item1._id)
       ) || []
 
     tempCart.map((item1: ProductInterface) =>
-      anonCart.map((item2: cartItem) => {
+      anonCart.map((item2: CartItem) => {
         if (item1._id === item2.id) item1.quantity = Number(item2.quantity)
       })
     )
@@ -74,13 +80,13 @@ const Cart = () => {
   useEffect(() => {
     // if user not logged in
     if ((userCart as UserCart)?.data?.currentUser?.email) {
-      setTempCartData(onlineCart)
+      setTempCartData(onlineCart as SetStateAction<CartItem[]>)
       // if user is logged in
     } else setTempCartData(getTempCartData())
   }, [getTempCartData, cartStatus, setTempCartData, userCart, data, onlineCart])
 
   // updating the item quantities from the cart
-  const updateCartItemQuantity = async (
+  const CpdateCartItemQuantity = async (
     e: React.MouseEvent<HTMLButtonElement>,
     id: string
   ) => {
@@ -90,15 +96,15 @@ const Cart = () => {
       // get the cart from session storage or an empty array if there is none
       const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       // check if item exist
-      const existingItem = anonCart.find((item: cartItem) => item.id === id)
+      const existingItem = anonCart.find((item: CartItem) => item.id === id)
 
       // if item exists, update its quantity only
-      anonCart.filter((cartItem: cartItem) => {
-        if (cartItem.id === id && existingItem && target.value === 'plus') {
+      anonCart.filter((CartItem: CartItem) => {
+        if (CartItem.id === id && existingItem && target.value === 'plus') {
           existingItem.quantity += 1
         }
         if (
-          cartItem.id === id &&
+          CartItem.id === id &&
           existingItem &&
           target.value === 'minus' &&
           existingItem.quantity > 0
@@ -109,29 +115,29 @@ const Cart = () => {
       const tempCart =
         data?.data.filter(
           (item1: ProductInterface) =>
-            anonCart.some((item2: cartItem) => item2.id === item1._id) &&
+            anonCart.some((item2: CartItem) => item2.id === item1._id) &&
             item1.quantity !== 0
         ) || []
 
       tempCart.map((item1: ProductInterface) =>
-        anonCart.map((item2: cartItem) => {
+        anonCart.map((item2: CartItem) => {
           if (item1._id === item2.id) item1.quantity = Number(item2.quantity)
         })
       )
       // if quantity becomes 0, remove it
-      setTempCartData(tempCart.filter((item: cartItem) => item.quantity !== 0))
+      setTempCartData(tempCart.filter((item: CartItem) => item.quantity !== 0))
       sessionStorage.setItem(
         'anonCart',
-        JSON.stringify(anonCart.filter((item: cartItem) => item.quantity !== 0))
+        JSON.stringify(anonCart.filter((item: CartItem) => item.quantity !== 0))
       )
     } else {
       // if user is logged in, use online user cart
       setCurrentUpdating(id)
-      const currentCartItem = data?.data.find(
-        (item: cartItem) => item._id === id
+      const CurrentCartItem = data?.data.find(
+        (item: CartItem) => item._id === id
       )
 
-      const { price } = currentCartItem
+      const { price } = CurrentCartItem
       const quantity = target.value === 'plus' ? 1 : -1
 
       const product = {
@@ -151,9 +157,9 @@ const Cart = () => {
     // if user is not logged in, delete from session storage
     if (!userExist) {
       let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
-      anonCart = anonCart.filter((item: cartItem) => item.id !== id)
+      anonCart = anonCart.filter((item: CartItem) => item.id !== id)
       let updatedData = [...tempCartData] || []
-      updatedData = updatedData.filter((item: cartItem) => item._id !== id)
+      updatedData = updatedData.filter((item: CartItem) => item._id !== id)
       sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
       setTempCartData(updatedData)
     } else {
@@ -200,7 +206,7 @@ const Cart = () => {
                 // Total Price
                 <TableCaption>
                   Total: $
-                  {tempCartData?.reduce((acc: number, cur: cartItem) => {
+                  {tempCartData?.reduce((acc: number, cur: CartItem) => {
                     const total = acc + cur.price!
                     return Number(total.toFixed(2))
                   }, 0)}
@@ -238,7 +244,7 @@ const Cart = () => {
               )}
 
               <TableBody>
-                {tempCartData?.map((item: cartItem) => {
+                {tempCartData?.map((item: CartItem) => {
                   const { name, quantity, link, price } = item
                   const productId = item.productId || item._id
 
@@ -268,7 +274,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                updateCartItemQuantity(e, productId!)
+                                CpdateCartItemQuantity(e, productId!)
                               }}
                               value='minus'
                               className={`btn-xs btn-warning rounded-full hover:bg-yellow-400 duration-300 ${
@@ -300,7 +306,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                updateCartItemQuantity(e, productId!)
+                                CpdateCartItemQuantity(e, productId!)
                               }}
                               value='plus'
                               className={`btn-xs ${

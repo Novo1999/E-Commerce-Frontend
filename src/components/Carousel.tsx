@@ -1,26 +1,48 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, ReactNode } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+
+type CarouselProps = {
+  children: ReactNode
+  autoSlide?: boolean
+  autoSlideInterval?: number
+}
 
 const Carousel = ({
   children: slides,
   autoSlide = true,
   autoSlideInterval = 3000,
-}) => {
+}: CarouselProps) => {
   const [curr, setCurr] = useState(0)
 
   const prev = () =>
-    setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1))
+    setCurr((curr) =>
+      curr === 0 ? (Array.isArray(slides) ? slides.length - 1 : 0) : curr - 1
+    )
+
   const next = useCallback(
-    () => setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1)),
-    [slides.length]
+    () =>
+      setCurr((curr) =>
+        curr === (Array.isArray(slides) ? slides.length - 1 : 0) ? 0 : curr + 1
+      ),
+    [slides]
   )
 
   useEffect(() => {
-    // setTimeout(() => prev(), 1000)
+    if (!slides || (Array.isArray(slides) && slides.length === 0))
+      // Handle the case when slides are null, undefined, or an empty array
+      return
+
     if (!autoSlide) return
+
     const slideInterval = setInterval(next, autoSlideInterval)
     return () => clearInterval(slideInterval)
-  }, [autoSlide, autoSlideInterval, next])
+  }, [autoSlide, autoSlideInterval, next, slides])
+
+  if (!slides || (Array.isArray(slides) && slides.length === 0)) {
+    // Return a message or placeholder when slides are null, undefined, or an empty array
+    return <p>No slides available</p>
+  }
+
   return (
     <div className='overflow-hidden relative'>
       <div

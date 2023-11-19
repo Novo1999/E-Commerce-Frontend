@@ -1,13 +1,14 @@
 import customFetch from '@/utils/customFetch'
 import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
 const getProductByName = async (name: string) => {
   try {
     const product = await customFetch.get(`products/${name}`)
     return product
   } catch (error) {
-    toast.error(error?.response?.data?.msg)
+    if (error instanceof AxiosError) toast.error(error?.response?.data?.msg)
   }
 }
 
