@@ -12,32 +12,40 @@ const Account = ({
   avatar: string
 }) => {
   const { data: userCart } = useGetCart()
-  const name = (userCart as UserCart)?.data?.currentUser?.name
-  const email = (userCart as UserCart)?.data?.currentUser?.email
+  const name = (userCart as UserCart)?.data?.currentUser?.name || ''
+  const email = (userCart as UserCart)?.data?.currentUser?.email || ''
 
   return (
     <>
       <h2 className='text-xl'>My Account</h2>
-      <div className='card shadow-xl w-full flex flex-col items-center gap-4'>
+      <div className='card shadow-xl w-full lg:w-[60rem] lg:h-[42rem] flex flex-col items-center gap-4'>
         <div className='mt-6'>
-          <Avatar className='h-48 w-48 mx-10 lg:h-fit lg:w-fit'>
-            <AvatarImage
-              className='w-48 h-72 lg:h-96 lg:w-fit object-contain'
-              src={avatar}
-            />
-            <AvatarFallback className='text-xs'>Image</AvatarFallback>
+          <Avatar className='w-fit h-fit mx-6'>
+            <AvatarImage className='w-48 h-48 object-cover' src={avatar} />
+            <AvatarFallback className='text-xs'>
+              {!name ? (
+                <img
+                  className='w-48 h-48'
+                  src='/assets/avatar-placeholder.gif'
+                />
+              ) : (
+                <img
+                  src={`https://eu.ui-avatars.com/api/?name=${name}&size=250`}
+                ></img>
+              )}
+            </AvatarFallback>
           </Avatar>
         </div>
         <div className='card-body flex flex-col items-center gap-4'>
-          <Label htmlFor='Name' className='text-sm'>
+          <Label htmlFor='Name' className='text-sm lg:text-xl'>
             Name
           </Label>
-          <h2 className='card-title text-lg break-words'>{name}</h2>
-          <Label htmlFor='Email' className='text-sm'>
+          <h2 className='card-title text-lg lg:text-2xl break-words'>{name}</h2>
+          <Label htmlFor='Email' className='text-sm lg:text-xl'>
             Email
           </Label>
-          <p className='font-thin break-all'>{email}</p>
-          <div className='card-actions justify-end'>
+          <p className='font-thin break-all lg:text-3xl'>{email}</p>
+          <div className='card-actions relative lg:bottom-32'>
             <button
               onClick={() => setIsEditing(true)}
               className='btn btn-primary'

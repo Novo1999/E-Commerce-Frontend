@@ -100,11 +100,18 @@ const Edit = ({
     <div className='flex flex-col items-center relative'>
       <CrossButton setIsEditing={setIsEditing} />
       <h2 className='text-xl'>My Account</h2>
-
       <div className='mt-6'>
-        <Avatar className='h-24 w-24 mx-10 lg:h-48 lg:w-48'>
-          <AvatarImage className='w-48 h-72 lg:h-72 lg:w-96' src={avatar} />
-          <AvatarFallback className='text-xs'>Image</AvatarFallback>
+        <Avatar className='w-24 h-24 mx-6'>
+          <AvatarImage className='w-24 h-24 object-cover' src={avatar} />
+          <AvatarFallback className='text-xs'>
+            {!name ? (
+              <img className='w-48 h-48' src='/assets/avatar-placeholder.gif' />
+            ) : (
+              <img
+                src={`https://eu.ui-avatars.com/api/?name=${name}&size=250`}
+              ></img>
+            )}
+          </AvatarFallback>
         </Avatar>
       </div>
       <Form {...form}>

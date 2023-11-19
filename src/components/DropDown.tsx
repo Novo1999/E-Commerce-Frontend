@@ -11,6 +11,8 @@ import { GrClose } from 'react-icons/gr'
 import { Cart, Login, Register } from '.'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { UserCart } from './Cart'
+import { useGetCart } from '@/hooks/useGetCart'
 
 interface DropDownProps {
   isHamburgerMenuOpen: boolean
@@ -22,7 +24,8 @@ const DropDown = ({
   setIsHamburgerMenuOpen,
 }: DropDownProps) => {
   const [currentOpen, setCurrentOpen] = useState('')
-
+  const { data } = useGetCart()
+  const email = (data as UserCart)?.data?.currentUser?.email || ''
   return (
     <div className='text-2xl md:hidden p-1'>
       <DropdownMenu
@@ -58,12 +61,14 @@ const DropDown = ({
           >
             Register
           </DropdownMenuLabel>
-          <DropdownMenuLabel
-            onClick={() => setCurrentOpen('login')}
-            className='text-2xl'
-          >
-            Login
-          </DropdownMenuLabel>
+          {!email && (
+            <DropdownMenuLabel
+              onClick={() => setCurrentOpen('login')}
+              className='text-2xl'
+            >
+              Login
+            </DropdownMenuLabel>
+          )}
           <DropdownMenuLabel
             onClick={() => setCurrentOpen('')}
             className='text-2xl flex items-center gap-1'

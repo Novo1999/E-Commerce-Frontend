@@ -2,9 +2,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { useEffect, useState } from 'react'
 import { Login, Register } from '.'
+import { useGetCart } from '@/hooks/useGetCart'
+import { UserCart } from './Cart'
 
 const Tab = () => {
   const [isTabContentOpen, setIsTabContentOpen] = useState(false)
+  const { data } = useGetCart()
+  const email = (data as UserCart)?.data?.currentUser?.email || ''
 
   // closing the tabs when clicking outside
   useEffect(() => {
@@ -26,7 +30,7 @@ const Tab = () => {
     >
       <TabsList onClick={() => setIsTabContentOpen(true)}>
         <TabsTrigger value='register'>Register</TabsTrigger>
-        <TabsTrigger value='login'>Log in</TabsTrigger>
+        {!email && <TabsTrigger value='login'>Log in</TabsTrigger>}
       </TabsList>
       {isTabContentOpen && (
         <TabsContent value='register'>

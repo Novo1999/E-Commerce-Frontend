@@ -1,4 +1,3 @@
-import { CartContext } from '@/App'
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -22,14 +22,14 @@ const Profile = () => {
   const data = useLoaderData()
   const navigate = useNavigate()
   useEffect(() => {
-    if (!data.data?.currentUser?.email) {
+    if (!(data as UserCart).data?.currentUser?.email) {
       toast.error('Please Log In First')
       navigate('/')
     }
   }, [data, navigate])
 
   return (
-    <div className='h-screen text-center mt-4 mx-10 flex flex-col items-center'>
+    <div className='min-h-screen text-center mt-4 mx-10 flex flex-col items-center'>
       {isEditing ? (
         <Edit avatar={avatar} setIsEditing={setIsEditing} />
       ) : (

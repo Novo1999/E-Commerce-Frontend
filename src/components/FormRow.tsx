@@ -9,7 +9,7 @@ import { FieldValues } from 'react-hook-form'
 
 const FormRow = ({ label, field }: { label: string; field: FieldValues }) => {
   return (
-    <FormItem className='flex flex-col items-start w-80'>
+    <FormItem className='flex flex-col items-start'>
       <FormLabel>{label}</FormLabel>
       <FormControl>
         {label === 'Image' ? (
