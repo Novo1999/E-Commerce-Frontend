@@ -1,28 +1,33 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { useGetCart } from '@/hooks/useGetCart'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { UserCart } from './Cart'
 
 const Account = ({
   setIsEditing,
+  avatar,
 }: {
   setIsEditing: Dispatch<SetStateAction<boolean>>
+  avatar: string
 }) => {
-  const { data: userCart, isLoading } = useGetCart()
+  const { data: userCart } = useGetCart()
   const name = (userCart as UserCart)?.data?.currentUser?.name
   const email = (userCart as UserCart)?.data?.currentUser?.email
 
   return (
     <>
       <h2 className='text-xl'>My Account</h2>
-      <div className='mt-6'>
-        <Avatar className='h-fit w-fit'>
-          <AvatarImage src='https://github.com/shadcn.png' />
-          <AvatarFallback className='text-xs'>Image</AvatarFallback>
-        </Avatar>
-      </div>
-      <div className='card shadow-xl w-full'>
+      <div className='card shadow-xl w-full flex flex-col items-center gap-4'>
+        <div className='mt-6'>
+          <Avatar className='h-48 w-48 mx-10 lg:h-fit lg:w-fit'>
+            <AvatarImage
+              className='w-48 h-72 lg:h-96 lg:w-fit object-contain'
+              src={avatar}
+            />
+            <AvatarFallback className='text-xs'>Image</AvatarFallback>
+          </Avatar>
+        </div>
         <div className='card-body flex flex-col items-center gap-4'>
           <Label htmlFor='Name' className='text-sm'>
             Name

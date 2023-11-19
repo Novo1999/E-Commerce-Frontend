@@ -12,8 +12,6 @@ const Product = ({ product }: { product: ProductInterface }) => {
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
     useHandleCart()
 
-  // console.log(cartStatus)
-
   const { _id: id, name, brand, price, category, link } = product
   return (
     <div

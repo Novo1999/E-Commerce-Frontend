@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import customFetch from '@/utils/customFetch'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
-import { ReactElement, useContext } from 'react'
+import { ReactElement } from 'react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 
@@ -25,7 +25,6 @@ const logOut = async (queryClient: QueryClient) => {
 }
 
 const ProfileDropdown = ({ children }: { children: ReactElement }) => {
-  const { setIsAuthenticated } = useContext(CartContext)
   const queryClient = useQueryClient()
   return (
     <DropdownMenu>
@@ -39,7 +38,6 @@ const ProfileDropdown = ({ children }: { children: ReactElement }) => {
         <DropdownMenuItem
           onClick={() => {
             logOut(queryClient)
-            setIsAuthenticated(false)
           }}
         >
           Log Out

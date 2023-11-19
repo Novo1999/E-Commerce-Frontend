@@ -34,15 +34,14 @@ import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 
 export type UserCart = {
   data: {
-    currentUser: { email: string; name: string }
+    currentUser: { email: string; name: string; avatar: string }
     cart: [{ products: cartItem }]
   }
 }
 
 const Cart = () => {
   const { data, isLoading } = useGetAllProducts('a-z', 0, 0)
-  const { cartStatus, tempCartData, setTempCartData, isAuthenticated } =
-    useContext(CartContext)
+  const { cartStatus, tempCartData, setTempCartData } = useContext(CartContext)
   const { data: userCart } = useGetCart()
   const [currentUpdating, setCurrentUpdating] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
@@ -50,6 +49,7 @@ const Cart = () => {
   const queryClient = useQueryClient()
   const isFetching = useIsFetching()
   const onlineCart = (userCart as UserCart)?.data?.cart[0]?.products
+  const userExist = (userCart as UserCart)?.data?.currentUser?.email
 
   // get temporary cart data
   const getTempCartData = useCallback(() => {
@@ -86,7 +86,7 @@ const Cart = () => {
   ) => {
     const target = e.currentTarget as HTMLButtonElement
     // if user not logged in use session storage
-    if (!isAuthenticated) {
+    if (!userExist) {
       // get the cart from session storage or an empty array if there is none
       const anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       // check if item exist
@@ -149,7 +149,7 @@ const Cart = () => {
   // delete
   const handleDeleteItem = async (id: string) => {
     // if user is not logged in, delete from session storage
-    if (!isAuthenticated) {
+    if (!userExist) {
       let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
       anonCart = anonCart.filter((item: cartItem) => item.id !== id)
       let updatedData = [...tempCartData] || []
@@ -200,7 +200,7 @@ const Cart = () => {
                 // Total Price
                 <TableCaption>
                   Total: $
-                  {tempCartData.reduce((acc: number, cur: cartItem) => {
+                  {tempCartData?.reduce((acc: number, cur: cartItem) => {
                     const total = acc + cur.price!
                     return Number(total.toFixed(2))
                   }, 0)}

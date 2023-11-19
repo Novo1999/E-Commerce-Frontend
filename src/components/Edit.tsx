@@ -4,7 +4,7 @@ import { CrossButton, FormRow } from '@/components'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetCart } from '@/hooks/useGetCart'
 import { UserCart } from './Cart'
@@ -12,6 +12,7 @@ import customFetch from '@/utils/customFetch'
 import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import { useNavigate } from 'react-router'
 
 const formSchema = z.object({
   name: z
@@ -22,22 +23,32 @@ const formSchema = z.object({
   currentPassword: z.string(),
   newPassword: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters' })
-    .max(50, {
-      message:
-        'Password character limit exceeded.Please use less than 50 characters',
-    }),
+    .refine(
+      (password) =>
+        !password || (password.length >= 6 && password.length <= 50),
+      { message: 'Password must be between 6 and 50 characters' }
+    ),
+  avatar: z.any(),
 })
 
+let toastId: string
 const Edit = ({
   setIsEditing,
+  avatar,
 }: {
   setIsEditing: Dispatch<SetStateAction<boolean>>
+  avatar: string
 }) => {
   const { data } = useGetCart()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const name = (data as UserCart)?.data.currentUser?.name
-  const email = (data as UserCart)?.data.currentUser?.email
+  const name = (data as UserCart)?.data.currentUser?.name || ''
+  const email = (data as UserCart)?.data.currentUser?.email || ''
+
+  useEffect(() => {
+    if (email === '') navigate('/')
+  }, [email, navigate])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,19 +65,34 @@ const Edit = ({
       email,
       currentPassword: oldPassword,
       newPassword: password,
+      avatar,
     } = values
+
+    const formData = new FormData()
+    if (avatar) {
+      formData.append('avatar', avatar[0])
+    }
+    formData.append('name', name)
+    formData.append('email', email)
+    formData.append('oldPassword', oldPassword)
+    formData.append('password', password)
+
     try {
-      await customFetch.patch('/user/edit', {
-        name,
-        email,
-        password,
-        oldPassword,
+      toastId = toast.loading('Updating..')
+      await customFetch.patch('/user/edit', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
-      toast.success('User edited successfully')
+
+      toast.success('User edited successfully', {
+        id: toastId,
+      })
       setIsEditing(false)
       queryClient.invalidateQueries({ queryKey: ['user'] })
     } catch (error) {
-      if (error instanceof AxiosError) toast.error(error?.response?.data?.msg)
+      if (error instanceof AxiosError)
+        toast.error(error?.response?.data?.msg, { id: toastId })
     }
   }
 
@@ -74,9 +100,10 @@ const Edit = ({
     <div className='flex flex-col items-center relative'>
       <CrossButton setIsEditing={setIsEditing} />
       <h2 className='text-xl'>My Account</h2>
+
       <div className='mt-6'>
-        <Avatar className='h-24 w-24'>
-          <AvatarImage src='https://github.com/shadcn.png' />
+        <Avatar className='h-24 w-24 mx-10 lg:h-48 lg:w-48'>
+          <AvatarImage className='w-48 h-72 lg:h-72 lg:w-96' src={avatar} />
           <AvatarFallback className='text-xs'>Image</AvatarFallback>
         </Avatar>
       </div>
@@ -99,6 +126,7 @@ const Edit = ({
               <FormRow label='Current Password' field={field} />
             )}
           />
+
           <FormField
             control={form.control}
             name='newPassword'
@@ -106,6 +134,12 @@ const Edit = ({
               <FormRow label='New Password' field={field} />
             )}
           />
+          <FormField
+            control={form.control}
+            name='avatar'
+            render={({ field }) => <FormRow label='Image' field={field} />}
+          />
+
           <Button type='submit'>Submit</Button>
         </form>
       </Form>

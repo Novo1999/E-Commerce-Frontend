@@ -16,5 +16,6 @@ export const useGetCart = () => {
     queryFn: () => getUserCart(),
     refetchOnMount: false,
   })
+
   return { data, isLoading }
 }
