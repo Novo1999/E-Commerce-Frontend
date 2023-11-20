@@ -18,7 +18,6 @@ const Profile = () => {
             <AvatarFallback className='text-xs'>
               {!name ? (
                 <img
-                  className='w-24 h-24 object-cover'
                   src='/assets/avatar-placeholder.gif'
                   alt='Avatar Placeholder'
                 />
