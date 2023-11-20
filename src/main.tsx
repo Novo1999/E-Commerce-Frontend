@@ -12,6 +12,8 @@ import {
   SingleProduct,
   ProductByCategory,
   Profile,
+  Contact,
+  About,
 } from './pages'
 
 const router = createBrowserRouter([
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <Profile />,
         loader: ProfileLoader,
+      },
+      {
+        path: '/contact',
+        element: <Contact />,
+      },
+      {
+        path: '/about',
+        element: <About />,
       },
     ],
   },

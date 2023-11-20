@@ -1,16 +1,14 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { GrClose } from 'react-icons/gr'
-import { Cart, Login, Register } from '.'
+import { Cart, DropDownItem, Login, Register } from '.'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { UserCart } from './Cart'
 import { useGetCart } from '@/hooks/useGetCart'
 
@@ -18,6 +16,25 @@ interface DropDownProps {
   isHamburgerMenuOpen: boolean
   setIsHamburgerMenuOpen: (arg: boolean) => boolean | void
 }
+
+const dropDownItems = [
+  {
+    link: '/',
+    pageName: 'Home',
+  },
+  {
+    link: '/all-products',
+    pageName: 'All Products',
+  },
+  {
+    link: '/about',
+    pageName: 'About',
+  },
+  {
+    link: '/contact',
+    pageName: 'Contact',
+  },
+]
 
 const DropDown = ({
   isHamburgerMenuOpen,
@@ -41,20 +58,18 @@ const DropDown = ({
 
         <DropdownMenuContent className='w-screen h-screen border-0 flex flex-col items-center md:hidden relative top-2'>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setIsHamburgerMenuOpen(false)}
-            className='text-2xl'
-          >
-            <Link to='/'>Home</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setIsHamburgerMenuOpen(false)}
-            className='text-2xl'
-          >
-            <Link to='/all-products'>All Products</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem className='text-2xl'>About</DropdownMenuItem>
-          <DropdownMenuItem className='text-2xl'>Contact</DropdownMenuItem>
+          {dropDownItems.map((item, index) => {
+            const { link, pageName } = item
+            return (
+              <DropDownItem
+                key={index}
+                link={link}
+                pageName={pageName}
+                setIsHamburgerMenuOpen={setIsHamburgerMenuOpen}
+              />
+            )
+          })}
+
           <DropdownMenuLabel
             onClick={() => setCurrentOpen('register')}
             className='text-2xl'
