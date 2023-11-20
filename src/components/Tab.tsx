@@ -26,10 +26,11 @@ const Tab = () => {
   return (
     <Tabs
       defaultValue='account'
-      className='w-[250px] flex items-center gap-4 tabs relative sm:right-2 lg:right-10'
+      className='w-[250px] flex items-center gap-4 tabs relative sm:right-2 lg:right-10 xl:left-20'
     >
       <TabsList onClick={() => setIsTabContentOpen(true)}>
         <TabsTrigger value='register'>Register</TabsTrigger>
+        {/* if no email, then show the log in tab */}
         {!email && <TabsTrigger value='login'>Log in</TabsTrigger>}
       </TabsList>
       {isTabContentOpen && (

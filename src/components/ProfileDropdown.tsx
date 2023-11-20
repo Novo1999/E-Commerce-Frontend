@@ -6,11 +6,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useGetCart } from '@/hooks/useGetCart'
 import customFetch from '@/utils/customFetch'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { ReactElement } from 'react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+import { UserCart } from './Cart'
 
 const logOut = async (queryClient: QueryClient) => {
   try {
@@ -25,6 +27,9 @@ const logOut = async (queryClient: QueryClient) => {
 
 const ProfileDropdown = ({ children }: { children: ReactElement }) => {
   const queryClient = useQueryClient()
+  const { data } = useGetCart()
+  const email = (data as UserCart)?.data?.currentUser?.email || ''
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
@@ -34,13 +39,15 @@ const ProfileDropdown = ({ children }: { children: ReactElement }) => {
         <DropdownMenuItem>
           <Link to='/profile'>Settings</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            logOut(queryClient)
-          }}
-        >
-          Log Out
-        </DropdownMenuItem>
+        {email && (
+          <DropdownMenuItem
+            onClick={() => {
+              logOut(queryClient)
+            }}
+          >
+            Log Out
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

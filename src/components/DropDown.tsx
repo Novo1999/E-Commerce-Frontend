@@ -44,7 +44,7 @@ const DropDown = ({
   const { data } = useGetCart()
   const email = (data as UserCart)?.data?.currentUser?.email || ''
   return (
-    <div className='text-2xl md:hidden p-1'>
+    <div className='text-2xl lg:hidden p-1'>
       <DropdownMenu
         onOpenChange={() => {
           setIsHamburgerMenuOpen(!isHamburgerMenuOpen)
@@ -52,11 +52,11 @@ const DropDown = ({
         }}
         open={isHamburgerMenuOpen}
       >
-        <DropdownMenuTrigger className='md:hidden'>
+        <DropdownMenuTrigger className='lg:hidden mt-2'>
           {isHamburgerMenuOpen ? <GrClose /> : <GiHamburgerMenu />}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className='w-screen h-screen border-0 flex flex-col items-center md:hidden relative top-2'>
+        <DropdownMenuContent className='w-screen h-screen border-0 flex flex-col items-center lg:hidden relative top-2'>
           <DropdownMenuSeparator />
           {dropDownItems.map((item, index) => {
             const { link, pageName } = item

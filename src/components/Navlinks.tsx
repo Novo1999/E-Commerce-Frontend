@@ -12,7 +12,7 @@ const setActiveTabStyle = () => {
 
 const Navlinks = () => {
   return (
-    <div className='flex gap-0 lg:gap-4 relative sm:right-2 lg:right-10'>
+    <div className='flex gap-0 lg:gap-4 relative sm:right-2 lg:right-10 xl:left-20'>
       <NavLink className={setActiveTabStyle()} to='/'>
         Home
       </NavLink>

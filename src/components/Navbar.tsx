@@ -35,7 +35,7 @@ const Navbar = () => {
     >
       <Logo />
       <div className='flex justify-center items-center gap-2'>
-        <span className='visible sm:hidden'>
+        <span className='visible lg:hidden'>
           <ModeToggle />
         </span>
         <DropDown
@@ -43,7 +43,7 @@ const Navbar = () => {
           setIsHamburgerMenuOpen={setIsHamburgerMenuOpen}
         />
       </div>
-      <div className='md:flex items-center gap-2 hidden'>
+      <div className='lg:flex items-center gap-2 hidden mr-4'>
         <Navlinks />
         <Tab />
         <div className='flex justify-center items-center'>
@@ -54,7 +54,3 @@ const Navbar = () => {
   )
 }
 export default Navbar
-
-// top = 943
-// intersects -> top = 523
-// after -> top = -816

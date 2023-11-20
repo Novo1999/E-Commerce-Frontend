@@ -45,14 +45,16 @@ const Account = ({
             Email
           </Label>
           <p className='font-thin break-all lg:text-3xl'>{email}</p>
-          <div className='card-actions relative lg:bottom-32'>
-            <button
-              onClick={() => setIsEditing(true)}
-              className='btn btn-primary'
-            >
-              Edit Profile
-            </button>
-          </div>
+          {email && (
+            <div className='card-actions'>
+              <button
+                onClick={() => setIsEditing(true)}
+                className='btn btn-primary'
+              >
+                Edit Profile
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
