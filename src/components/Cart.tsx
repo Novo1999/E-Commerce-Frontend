@@ -86,7 +86,7 @@ const Cart = () => {
   }, [getTempCartData, cartStatus, setTempCartData, userCart, data, onlineCart])
 
   // updating the item quantities from the cart
-  const CpdateCartItemQuantity = async (
+  const UpdateCartItemQuantity = async (
     e: React.MouseEvent<HTMLButtonElement>,
     id: string
   ) => {
@@ -185,8 +185,9 @@ const Cart = () => {
         <SheetTrigger className='text-3xl flex justify-center relative'>
           <AiOutlineShoppingCart />
           <div
-            className='absolute bg-red-500 rounded-full p-2 h-2 top-0 text-xs left-4
-            flex justify-center items-center text-white w-fit'
+            className={` bg-red-500 rounded-full p-2 h-2 top-0 text-xs left-4 ${
+              tempCartData?.length > 0 ? 'absolute' : 'hidden'
+            } flex justify-center items-center text-white w-fit`}
           >
             {tempCartData?.length}
           </div>
@@ -274,7 +275,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                CpdateCartItemQuantity(e, productId!)
+                                UpdateCartItemQuantity(e, productId!)
                               }}
                               value='minus'
                               className={`btn-xs btn-warning rounded-full hover:bg-yellow-400 duration-300 ${
@@ -306,7 +307,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                CpdateCartItemQuantity(e, productId!)
+                                UpdateCartItemQuantity(e, productId!)
                               }}
                               value='plus'
                               className={`btn-xs ${

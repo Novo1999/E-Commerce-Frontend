@@ -18,7 +18,7 @@ const Account = ({
   return (
     <>
       <h2 className='text-xl'>My Account</h2>
-      <div className='card shadow-xl w-full lg:w-[60rem] lg:h-[42rem] flex flex-col items-center gap-4'>
+      <div className='card shadow-xl w-full lg:w-[60rem] lg:h-[36rem] flex flex-col items-center gap-4'>
         <div className='mt-6'>
           <Avatar className='w-fit h-fit mx-6'>
             <AvatarImage className='w-48 h-48 object-cover' src={avatar} />
@@ -46,14 +46,12 @@ const Account = ({
           </Label>
           <p className='font-thin break-all lg:text-3xl'>{email}</p>
           {email && (
-            <div className='card-actions'>
-              <button
-                onClick={() => setIsEditing(true)}
-                className='btn btn-primary'
-              >
-                Edit Profile
-              </button>
-            </div>
+            <button
+              onClick={() => setIsEditing(true)}
+              className='btn btn-primary'
+            >
+              Edit Profile
+            </button>
           )}
         </div>
       </div>

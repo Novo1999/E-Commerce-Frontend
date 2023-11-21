@@ -11,19 +11,33 @@ import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
 import { AxiosError } from 'axios'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { AuthInputs } from './Register'
 import customFetch from '@/utils/customFetch'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
 import { CartItem } from '@/hooks/useHandleCart'
 import { useQueryClient } from '@tanstack/react-query'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const formSchema = z.object({
+  email: z.string().email({ message: 'invalid email' }),
+  password: z.string(),
+})
+type formSchemaType = z.infer<typeof formSchema>
 
 const Login = ({ on }: { on?: string }) => {
-  const { register, handleSubmit, reset } = useForm<AuthInputs>()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<formSchemaType>({
+    resolver: zodResolver(formSchema),
+  })
   const { tempCartData, setTempCartData } = useContext(CartContext)
   const queryClient = useQueryClient()
 
-  const onSubmit: SubmitHandler<AuthInputs> = async (data) => {
+  const onSubmit: SubmitHandler<formSchemaType> = async (data) => {
     try {
       const user = await customFetch.post('/auth/login', data)
       toast.success(user.data?.msg)
@@ -76,6 +90,10 @@ const Login = ({ on }: { on?: string }) => {
             <div className='flex flex-col space-y-1.5'>
               <Label htmlFor='Email'>Email</Label>
               <Input {...register('email')} name='email' placeholder='Email' />
+              {/* Display error message if exists */}
+              {errors.email && (
+                <span className='text-red-500'>{errors.email.message}</span>
+              )}
             </div>
             <div className='flex flex-col space-y-1.5'>
               <Label htmlFor='Password'>Password</Label>
@@ -85,8 +103,12 @@ const Login = ({ on }: { on?: string }) => {
                 type='password'
                 placeholder='Password'
               />
+              {/* Display error message if exists */}
+              {errors.password && (
+                <span className='text-red-500'>{errors.password.message}</span>
+              )}
             </div>
-            <Button>Submit</Button>
+            <Button type='submit'>Submit</Button>
           </div>
         </form>
       </CardContent>

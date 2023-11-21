@@ -11,15 +11,16 @@ import customFetch from '@/utils/customFetch'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { ReactElement } from 'react'
 import toast from 'react-hot-toast'
-import { Link } from 'react-router-dom'
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom'
 import { UserCart } from './Cart'
 
-const logOut = async (queryClient: QueryClient) => {
+const logOut = async (queryClient: QueryClient, navigate: NavigateFunction) => {
   try {
     await customFetch.get('auth/logout')
     sessionStorage.clear()
     toast.success('Logged Out Successfully')
     queryClient.invalidateQueries({ queryKey: ['user'] })
+    navigate('/')
   } catch (error) {
     toast.error('Something went wrong')
   }
@@ -29,6 +30,7 @@ const ProfileDropdown = ({ children }: { children: ReactElement }) => {
   const queryClient = useQueryClient()
   const { data } = useGetCart()
   const email = (data as UserCart)?.data?.currentUser?.email || ''
+  const navigate = useNavigate()
 
   return (
     <DropdownMenu>
@@ -42,7 +44,7 @@ const ProfileDropdown = ({ children }: { children: ReactElement }) => {
         {email && (
           <DropdownMenuItem
             onClick={() => {
-              logOut(queryClient)
+              logOut(queryClient, navigate)
             }}
           >
             Log Out
