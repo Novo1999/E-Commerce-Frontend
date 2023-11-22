@@ -36,7 +36,11 @@ const Category = () => {
   }
 
   return (
-    <section className='flex flex-col h-fit sm:h-[50rem] lg:w-[56rem] xl:w-[90rem] 2xl:w-[96rem] category-section'>
+    <section
+      className={`flex flex-col ${
+        isLoading ? 'h-[40rem] w-[22rem]' : 'h-fit'
+      } sm:h-[50rem] lg:w-[56rem] xl:w-[90rem] 2xl:w-[96rem] category-section relative`}
+    >
       <div className='flex justify-between mx-4 xl:mx-20 text-sm items-center mt-6'>
         <h2 className='font-semibold sm:text-xl'>Shop by category</h2>
         <Select onValueChange={(value) => handleCategory(value)}>

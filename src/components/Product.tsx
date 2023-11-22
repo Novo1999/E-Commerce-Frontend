@@ -5,7 +5,7 @@ import { CartContext } from '@/App'
 import { useContext } from 'react'
 import { useHandleCart } from '@/hooks/useHandleCart'
 
-type cartItem = { id: string; quantity: number }
+type CartItem = { id: string; quantity: number }
 
 const Product = ({ product }: { product: ProductInterface }) => {
   const { cartStatus } = useContext(CartContext)
@@ -43,7 +43,7 @@ const Product = ({ product }: { product: ProductInterface }) => {
             <AiOutlineMinus />
           </button>
           <kbd className='kbd text-white h-full w-full'>
-            {cartStatus.find((item: cartItem) => item.id === id)?.quantity || 0}
+            {cartStatus.find((item: CartItem) => item.id === id)?.quantity || 0}
           </kbd>
           <button
             onClick={() => handleIncreaseQuantity(id)}

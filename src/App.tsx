@@ -1,6 +1,6 @@
 import { Toaster } from 'react-hot-toast'
 import { Outlet } from 'react-router'
-import { Navbar } from './components'
+import { About, Navbar } from './components'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from './components/ThemeProvider'
@@ -43,6 +43,7 @@ const App = () => {
           <Toaster />
           <Navbar />
           <Outlet />
+          <About />
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </CartContext.Provider>

@@ -14,7 +14,7 @@ const AllYouNeed = () => {
       >
         Shop Now
       </Link>
-      <p className='absolute font-poppins bottom-2 sm:text-4xl lg:text-6xl lg:bottom-10 sm:bottom-6 text-white font-semibold text-lg drop-shadow-lg'>
+      <p className='absolute  font-poppins bottom-2 sm:text-4xl lg:text-6xl lg:bottom-10 sm:bottom-6 text-white font-semibold text-lg drop-shadow-lg'>
         We have all you need
       </p>
     </section>

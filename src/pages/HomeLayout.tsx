@@ -17,7 +17,6 @@ const HomeLayout = () => {
       <AllYouNeed />
       <CustomerReview />
       <Contact />
-      <About />
     </main>
   )
 }
