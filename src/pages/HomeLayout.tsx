@@ -1,6 +1,5 @@
 import CustomerReview from '@/components/CustomerReview/CustomerReview'
 import {
-  About,
   AllYouNeed,
   Category,
   Contact,
