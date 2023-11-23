@@ -7,12 +7,14 @@ import { ProductInterface } from './AllProducts'
 import { CartItem, useHandleCart } from '@/hooks/useHandleCart'
 import { useContext } from 'react'
 import { CartContext } from '@/App'
+import { useTheme } from '@/components/ThemeProvider'
 
 const SingleProduct = () => {
   const { data, isLoading } = useGetSingleProduct()
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
     useHandleCart()
   const { cartStatus } = useContext(CartContext)
+  const { theme } = useTheme()
 
   const { id }: { id?: string } = useParams()
   const product = data?.data.product
@@ -36,7 +38,9 @@ const SingleProduct = () => {
   ) : (
     <section className='py-6 h-full gap-2 px-2 font-poppins xl:mx-40 2xl:mx-72 min-h-screen'>
       <div
-        className={`border-2 border-slate-400 rounded-lg mx-4 p-4 bg-slate-200 flex flex-col sm:flex-row  justify-between xl:justify-center xl:gap-40 lg:h-[32rem] xl:h-[36rem] items-center `}
+        className={`border-2 border-slate-400 rounded-lg mx-4 p-4 ${
+          theme === 'dark' ? 'bg-black' : 'bg-white'
+        }  flex flex-col sm:flex-row  justify-between xl:justify-center xl:gap-40 lg:h-[32rem] xl:h-[36rem] items-center `}
       >
         {/* LEFT DIV */}
         <div className='place-items-start flex flex-col lg:items-center lg:gap-10 sm:w-60 lg:w-96'>

@@ -1,11 +1,12 @@
 import { CartContext, CartStatus } from '@/App'
 import { showCartToast } from '../components/CartToast'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useGetCart } from './useGetCart'
 import { UserCart } from '@/components/Cart'
 import customFetch from '@/utils/customFetch'
 import { useQueryClient } from '@tanstack/react-query'
 import { useGetAllProducts } from './useGetAllProducts'
+import { useTheme } from '@/components/ThemeProvider'
 
 export type CartItem = {
   id?: string | undefined

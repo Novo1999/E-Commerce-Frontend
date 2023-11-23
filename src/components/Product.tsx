@@ -4,6 +4,7 @@ import { ProductInterface } from '@/pages/AllProducts'
 import { CartContext } from '@/App'
 import { useContext } from 'react'
 import { useHandleCart } from '@/hooks/useHandleCart'
+import { useTheme } from './ThemeProvider'
 
 type CartItem = { id: string; quantity: number }
 
@@ -11,11 +12,14 @@ const Product = ({ product }: { product: ProductInterface }) => {
   const { cartStatus } = useContext(CartContext)
   const { handleIncreaseQuantity, handleDecreaseQuantity, handleAddToCart } =
     useHandleCart()
+  const { theme } = useTheme()
 
   const { _id: id, name, brand, price, category, link } = product
   return (
     <div
-      className='card shadow-xl w-60 min-[375px]:w-64 min-[425px]:w-72 xl:w-80 h-full lg:h-fit border-2 transition-colors pt-4 sm:p-4 sm:gap-2 border-black font-poppins'
+      className={`card shadow-xl w-60 min-[375px]:w-64 min-[425px]:w-72 xl:w-80 h-full lg:h-fit border-2 transition-colors pt-4 sm:p-4 sm:gap-2 ${
+        theme === 'dark' ? 'border-white' : 'border-black'
+      }  font-poppins`}
       key={id}
     >
       <Link

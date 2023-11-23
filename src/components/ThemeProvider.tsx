@@ -52,6 +52,7 @@ export function ThemeProvider({
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
+      window.dispatchEvent(new Event('storage'))
       setTheme(theme)
     },
   }

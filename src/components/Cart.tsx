@@ -37,6 +37,7 @@ import { Link } from 'react-router-dom'
 import { useGetCart } from '@/hooks/useGetCart'
 import customFetch from '@/utils/customFetch'
 import { useIsFetching, useQueryClient } from '@tanstack/react-query'
+import { useTheme } from './ThemeProvider'
 
 export type UserCart = {
   data: {
@@ -56,6 +57,7 @@ const Cart = () => {
   const isFetching = useIsFetching()
   const onlineCart = (userCart as UserCart)?.data?.cart[0]?.products
   const userExist = (userCart as UserCart)?.data?.currentUser?.email
+  const { theme } = useTheme()
 
   // get temporary cart data
   const getTempCartData = useCallback(() => {
@@ -182,7 +184,11 @@ const Cart = () => {
   return (
     <aside>
       <Sheet>
-        <SheetTrigger className='text-3xl flex justify-center relative'>
+        <SheetTrigger
+          className={`text-3xl flex ${
+            theme === 'dark' ? 'text-white' : 'text-black'
+          } justify-center relative`}
+        >
           <AiOutlineShoppingCart />
           <div
             className={` bg-red-500 rounded-full p-2 h-2 top-0 text-xs left-4 ${

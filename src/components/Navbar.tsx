@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Logo, DropDown, Tab, Navlinks, Profile, ProfileDropdown } from '.'
 import { ModeToggle } from './ModeToggle'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { UserCart } from './Cart'
 import { useGetCart } from '@/hooks/useGetCart'
+import { useTheme } from './ThemeProvider'
 
 const Navbar = () => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false)
   const [isNavbarSticky, setIsNavbarSticky] = useState(false)
   const [opacityZero, setOpacityZero] = useState(false)
   const { data } = useGetCart()
+  const { theme } = useTheme()
+
   const email = (data as UserCart)?.data?.currentUser?.email || ''
   const name = (data as UserCart)?.data?.currentUser?.name || ''
   const avatar = (data as UserCart)?.data?.currentUser?.avatar
 
+  // setting navbar sticky on scroll
   useEffect(() => {
     const handleScroll = () => {
       const scrollAmount = window.scrollY
@@ -34,11 +38,11 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`p-2 sm:p-4 bg-white shadow-md w-full z-20 flex ${
+      className={`p-2 sm:p-4 shadow-md w-full z-20 flex ${
         opacityZero ? 'opacity-0' : 'opacity-100'
       } items-center transition-opacity duration-500 justify-between xl:justify-around ${
         isNavbarSticky ? 'fixed opacity-100' : 'relative opacity-0'
-      } xl:gap-40`}
+      } xl:gap-40 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
     >
       <Logo />
       <div className='flex justify-center items-center gap-2'>
