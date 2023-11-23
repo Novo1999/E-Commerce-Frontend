@@ -5,11 +5,11 @@ const PristineBanner = () => {
     <section className='flex flex-col gap-4 items-center justify-center lg:flex-row w-fit mt-10 mx-6 sm:mx-0 lg:mx-20 xl:gap-20'>
       <figure className='relative hover:opacity-90 transition-opacity'>
         <img
-          className='h-fit lg:h-[35rem] xl:h-[37.3rem] object-cover'
+          className='h-fit sm:h-[26.5rem] lg:h-[35rem] xl:h-[37.3rem] object-cover'
           src='/assets/pristine-1.jpg'
           alt='image'
         />
-        <figcaption className='text-base sm:text-3xl drop-shadow-lg text-center font-poppins mt-4 absolute bottom-3 right-3 text-white lg:text-3xl xl:text-6xl whitespace-nowrap font-semibold'>
+        <figcaption className='text-2xl sm:text-3xl drop-shadow-lg text-center font-poppins mt-4 absolute bottom-3 right-3 text-white lg:text-3xl xl:text-6xl whitespace-nowrap font-semibold'>
           Pristine Condition
         </figcaption>
         <Link
