@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Logo, DropDown, Tab, Navlinks, Profile } from '.'
+import { Logo, DropDown, Tab, Navlinks, Profile, ProfileDropdown } from '.'
 import { ModeToggle } from './ModeToggle'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { UserCart } from './Cart'
+import { useGetCart } from '@/hooks/useGetCart'
 
 const Navbar = () => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false)
   const [isNavbarSticky, setIsNavbarSticky] = useState(false)
   const [opacityZero, setOpacityZero] = useState(false)
+  const { data } = useGetCart()
+  const email = (data as UserCart)?.data?.currentUser?.email || ''
+  const name = (data as UserCart)?.data?.currentUser?.name || ''
+  const avatar = (data as UserCart)?.data?.currentUser?.avatar
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,7 +42,26 @@ const Navbar = () => {
     >
       <Logo />
       <div className='flex justify-center items-center gap-2'>
-        <span className='visible lg:hidden'>
+        <span className='visible lg:hidden flex'>
+          <ProfileDropdown>
+            <Avatar className='w-8 h-8 mx-6'>
+              <AvatarImage className='w-8 h-8 object-cover' src={avatar} />
+              <AvatarFallback className='text-xs'>
+                {!email ? (
+                  <img
+                    src='/assets/avatar-placeholder.gif'
+                    alt='Avatar Placeholder'
+                  />
+                ) : (
+                  <img
+                    className='w-24 h-24 object-cover'
+                    src={`https://eu.ui-avatars.com/api/?name=${name}&size=250`}
+                    alt='Generated Avatar'
+                  />
+                )}
+              </AvatarFallback>
+            </Avatar>
+          </ProfileDropdown>
           <ModeToggle />
         </span>
         <DropDown
