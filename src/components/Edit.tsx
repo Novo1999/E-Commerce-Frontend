@@ -58,6 +58,9 @@ const Edit = ({
       newPassword: '',
     },
   })
+  const {
+    formState: { isSubmitting },
+  } = form
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const {
@@ -69,9 +72,11 @@ const Edit = ({
     } = values
 
     const formData = new FormData()
+    // append the avatar to the form only if the avatar exists
     if (avatar) {
       formData.append('avatar', avatar[0])
     }
+    // append the other information to the form
     formData.append('name', name)
     formData.append('email', email)
     formData.append('oldPassword', oldPassword)
@@ -147,7 +152,9 @@ const Edit = ({
             render={({ field }) => <FormRow label='Image' field={field} />}
           />
 
-          <Button type='submit'>Submit</Button>
+          <Button disabled={isSubmitting} type='submit'>
+            Submit
+          </Button>
         </form>
       </Form>
     </div>
