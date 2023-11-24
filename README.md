@@ -1,7 +1,9 @@
 ## TECH
 
-- Redux
+- React
 - React query
-- Shadcn, Tailwind
+- Shadcn, Tailwind, DaisyUI
 - React router
-- 
+- Mongoose, Express
+
+Live link - gymba.vercel.app
