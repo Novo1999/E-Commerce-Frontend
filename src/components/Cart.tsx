@@ -88,7 +88,7 @@ const Cart = () => {
   }, [getTempCartData, cartStatus, setTempCartData, userCart, data, onlineCart])
 
   // updating the item quantities from the cart
-  const UpdateCartItemQuantity = async (
+  const updateCartItemQuantity = async (
     e: React.MouseEvent<HTMLButtonElement>,
     id: string
   ) => {
@@ -281,7 +281,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                UpdateCartItemQuantity(e, productId!)
+                                updateCartItemQuantity(e, productId!)
                               }}
                               value='minus'
                               className={`btn-xs btn-warning rounded-full hover:bg-yellow-400 duration-300 ${
@@ -313,7 +313,7 @@ const Cart = () => {
                                   currentUpdating === productId)
                               }
                               onClick={(e) => {
-                                UpdateCartItemQuantity(e, productId!)
+                                updateCartItemQuantity(e, productId!)
                               }}
                               value='plus'
                               className={`btn-xs ${

@@ -14,6 +14,7 @@ import { Button } from './ui/button'
 import { Spinner } from '.'
 import { constructQueryString } from '@/utils/handleQueryString'
 import { ProductInterface } from '@/pages/AllProducts'
+import { useTheme } from './ThemeProvider'
 
 const Category = () => {
   // getting the categories for the select
@@ -22,6 +23,7 @@ const Category = () => {
     queryFn: async () => await customFetch.get('products/categories'),
   })
   const [category, setCategory] = useState('Cardio')
+  const { theme } = useTheme()
 
   // getting the products by category
   const { data: productsByCategory, isLoading } = useQuery({
@@ -73,7 +75,13 @@ const Category = () => {
                   className='shadow-md rounded-lg p-4 flex flex-col items-center gap-2 border-2 border-slate-400 relative group w-72 min-[425px]:w-80 lg:w-full'
                   key={id}
                 >
-                  <div className='absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 bg-slate-400 py-2 text-white w-full text-center'>
+                  <div
+                    className={`absolute bottom-0 opacity-0 transition-opacity group-hover:opacity-100 ${
+                      theme === 'dark'
+                        ? 'bg-white text-black'
+                        : 'bg-black text-white'
+                    } py-2  w-full text-center`}
+                  >
                     View
                   </div>
                   <img
