@@ -42,7 +42,6 @@ const Checkout = () => {
   const { data: userCart } = useGetCart()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { tempCartData } = useContext(CartContext)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
