@@ -2,13 +2,18 @@ import { useGetCart } from '@/hooks/useGetCart'
 import customFetch from '@/utils/customFetch'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { CreatePaymentMethodData } from '@stripe/stripe-js'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import { Message } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { UserCart } from './Cart'
 import { RxCrossCircled } from 'react-icons/rx'
 import { CartItem } from '@/hooks/useHandleCart'
 import { IoBagCheckOutline } from 'react-icons/io5'
+import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router'
+import { Spinner } from '.'
+import { CartContext } from '@/App'
+import { Link } from 'react-router-dom'
 
 const CARD_OPTIONS = {
   style: {
@@ -31,9 +36,13 @@ const CARD_OPTIONS = {
 
 const Checkout = () => {
   const [success, setSuccess] = useState(false)
+  const [isPaying, setIsPaying] = useState(false)
   const stripe = useStripe()
   const elements = useElements()
   const { data: userCart } = useGetCart()
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const { tempCartData } = useContext(CartContext)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -45,13 +54,17 @@ const Checkout = () => {
     if (!error) {
       try {
         const { id } = paymentMethod
+        setIsPaying(true)
         const response = await customFetch.post('/checkout', {
           amount: 1000,
           id,
         })
         if (response.data.success) {
-          console.log('Successful Payment')
           setSuccess(true)
+          setIsPaying(false)
+          // deleting all items in cart after payment is successful
+          await customFetch.post('/cart/clear')
+          queryClient.invalidateQueries({ queryKey: ['user'] })
         }
       } catch (error) {
         console.log('Error', error)
@@ -61,31 +74,20 @@ const Checkout = () => {
     }
   }
 
-  // const handleDeleteItem = async (id: string) => {
-  //   // if user is not logged in, delete from session storage
-  //   if (!userExist) {
-  //     let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
-  //     anonCart = anonCart.filter((item: CartItem) => item.id !== id)
-  //     let updatedData = [...tempCartData] || []
-  //     updatedData = updatedData.filter((item: CartItem) => item._id !== id)
-  //     sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
-  //     setTempCartData(updatedData)
-  //   } else {
-  //     // if user is logged in, delete from online cart
-  //     setCurrentUpdating(id)
-
-  //     const quantity = 0
-
-  //     const product = {
-  //       productId: id,
-  //       quantity,
-  //     }
-  //     setIsDeleting(true)
-  //     await customFetch.post('/cart', product)
-  //     queryClient.invalidateQueries({ queryKey: ['user'] })
-  //     setIsDeleting(false)
-  //   }
-  // }
+  const handleDeleteItem = async (id: string) => {
+    const quantity = 0
+    const product = {
+      productId: id,
+      quantity,
+    }
+    const response = await customFetch.post('/cart', product)
+    // if cart gets empty, there is no point for the user to stay at the checkout page
+    if (response.data.products.length === 0) {
+      navigate('/all-products')
+      toast.success('Add something to the cart')
+    }
+    queryClient.invalidateQueries({ queryKey: ['user'] })
+  }
 
   return (
     <div className='min-h-screen font-poppins'>
@@ -95,13 +97,16 @@ const Checkout = () => {
         <IoBagCheckOutline /> Checkout
       </h2>
       <hr className='mb-10 border-black' />
+      {/* header */}
       <div className='px-4 lg:px-40 mb-10'>
-        <div className='grid grid-cols-4 ml-6 mb-4'>
-          <p className='text-xs'>Image</p>
-          <p className='text-xs'>Name</p>
-          <p className='text-xs ml-6'>Price</p>
-          <p className='text-xs'>Quantity</p>
-        </div>
+        {!success && (
+          <div className='grid grid-cols-4 ml-6 mb-4'>
+            <p className='text-xs'>Image</p>
+            <p className='text-xs'>Name</p>
+            <p className='text-xs ml-6'>Price</p>
+            <p className='text-xs'>Quantity</p>
+          </div>
+        )}
         {(userCart as UserCart)?.data?.cart[0]?.products.map(
           (product: CartItem) => {
             const { link, name, price, quantity, productId } = product
@@ -127,6 +132,7 @@ const Checkout = () => {
                 <button
                   className='text-xl text-red-600 tooltip w-fit'
                   data-tip='Delete Item'
+                  onClick={() => handleDeleteItem(productId!)}
                 >
                   <RxCrossCircled />
                 </button>
@@ -136,20 +142,43 @@ const Checkout = () => {
         )}
       </div>
       {!success ? (
-        <form onSubmit={handleSubmit} className='lg:flex flex-col items-center'>
-          <p className='mb-6 text-center'>Complete Your Payment</p>
-          <fieldset className='FormGroup lg:w-[44rem]'>
-            <CardElement options={CARD_OPTIONS} />
-          </fieldset>
-          <div className='flex justify-center items-center'>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded'>
-              Pay
-            </button>
-          </div>
-        </form>
+        isPaying ? (
+          <Spinner />
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className='lg:flex flex-col items-center'
+          >
+            <p className='mb-6 text-center'>
+              Complete Your Payment (Test Number: 4242 4242 4242 4242, then any
+              number)
+            </p>
+            <fieldset className='FormGroup lg:w-[44rem]'>
+              <CardElement options={CARD_OPTIONS} />
+            </fieldset>
+            <div className='flex justify-center items-center'>
+              <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded'>
+                Pay
+              </button>
+            </div>
+          </form>
+        )
       ) : (
-        <div>
-          <h2>You just bought a sweet stuff</h2>
+        <div className='flex flex-col items-center gap-20'>
+          <h2 className='text-md sm:text-2xl'>
+            Thank You for shopping with us
+          </h2>
+          <img
+            className='w-96 h-96 object-contain'
+            src='/assets/checkout.jpg'
+            alt='checkout guy image'
+          />
+          <Link
+            className='text-black rounded-full bg-red-500 mt-4 hover:bg-red-400 transition-colors duration-300 p-4'
+            to='/all-products'
+          >
+            Shop More
+          </Link>
         </div>
       )}
     </div>

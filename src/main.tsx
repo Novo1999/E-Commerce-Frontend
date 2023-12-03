@@ -4,7 +4,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import ErrorPage from './pages/Error.tsx'
 import App from './App.tsx'
-import { loader as ProfileLoader } from './pages/Profile.tsx'
+import { loader as ProfileLoader } from './routes/PrivateRoute.tsx'
 
 import {
   AllProducts,
@@ -16,6 +16,7 @@ import {
   About,
 } from './pages'
 import StripeContainer from './pages/StripeContainer.tsx'
+import PrivateRoute from './routes/PrivateRoute.tsx'
 
 const router = createBrowserRouter([
   {
@@ -42,7 +43,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <Profile />,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
         loader: ProfileLoader,
       },
       {
@@ -55,14 +60,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/payment',
-        element: <StripeContainer />,
+        element: (
+          <PrivateRoute>
+            <StripeContainer />
+          </PrivateRoute>
+        ),
+        loader: ProfileLoader,
       },
     ],
   },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </>
 )
