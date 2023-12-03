@@ -14,7 +14,6 @@ import {
   Profile,
   Contact,
   About,
-  Checkout,
 } from './pages'
 import StripeContainer from './pages/StripeContainer.tsx'
 

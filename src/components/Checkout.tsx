@@ -61,6 +61,32 @@ const Checkout = () => {
     }
   }
 
+  // const handleDeleteItem = async (id: string) => {
+  //   // if user is not logged in, delete from session storage
+  //   if (!userExist) {
+  //     let anonCart = JSON.parse(sessionStorage.getItem('anonCart')!) || []
+  //     anonCart = anonCart.filter((item: CartItem) => item.id !== id)
+  //     let updatedData = [...tempCartData] || []
+  //     updatedData = updatedData.filter((item: CartItem) => item._id !== id)
+  //     sessionStorage.setItem('anonCart', JSON.stringify(anonCart))
+  //     setTempCartData(updatedData)
+  //   } else {
+  //     // if user is logged in, delete from online cart
+  //     setCurrentUpdating(id)
+
+  //     const quantity = 0
+
+  //     const product = {
+  //       productId: id,
+  //       quantity,
+  //     }
+  //     setIsDeleting(true)
+  //     await customFetch.post('/cart', product)
+  //     queryClient.invalidateQueries({ queryKey: ['user'] })
+  //     setIsDeleting(false)
+  //   }
+  // }
+
   return (
     <div className='min-h-screen font-poppins'>
       {/* finalized cart item */}
