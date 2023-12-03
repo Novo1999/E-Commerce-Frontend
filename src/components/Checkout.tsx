@@ -2,7 +2,7 @@ import { useGetCart } from '@/hooks/useGetCart'
 import customFetch from '@/utils/customFetch'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { CreatePaymentMethodData } from '@stripe/stripe-js'
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Message } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { UserCart } from './Cart'
@@ -12,7 +12,7 @@ import { IoBagCheckOutline } from 'react-icons/io5'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { Spinner } from '.'
-import { CartContext } from '@/App'
+
 import { Link } from 'react-router-dom'
 
 const CARD_OPTIONS = {
