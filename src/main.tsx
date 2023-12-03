@@ -14,7 +14,9 @@ import {
   Profile,
   Contact,
   About,
+  Checkout,
 } from './pages'
+import StripeContainer from './pages/StripeContainer.tsx'
 
 const router = createBrowserRouter([
   {
@@ -51,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/about',
         element: <About />,
+      },
+      {
+        path: '/payment',
+        element: <StripeContainer />,
       },
     ],
   },

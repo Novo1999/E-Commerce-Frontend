@@ -42,7 +42,7 @@ import { useTheme } from './ThemeProvider'
 export type UserCart = {
   data: {
     currentUser: { email: string; name: string; avatar: string }
-    cart: [{ products: CartItem }]
+    cart: [{ products: Array<CartItem> }]
   }
 }
 
@@ -135,11 +135,11 @@ const Cart = () => {
     } else {
       // if user is logged in, use online user cart
       setCurrentUpdating(id)
-      const CurrentCartItem = data?.data.find(
+      const currentCartItem = data?.data.find(
         (item: CartItem) => item._id === id
       )
 
-      const { price } = CurrentCartItem
+      const { price } = currentCartItem
       const quantity = target.value === 'plus' ? 1 : -1
 
       const product = {
@@ -214,7 +214,10 @@ const Cart = () => {
                 <TableCaption>
                   Total: $
                   {tempCartData?.reduce((acc: number, cur: CartItem) => {
-                    const total = acc + cur.price!
+                    let total
+                    if (userExist) {
+                      total = acc + cur.price!
+                    } else total = acc + cur.price! * cur.quantity!
                     return Number(total.toFixed(2))
                   }, 0)}
                 </TableCaption>
@@ -328,7 +331,12 @@ const Cart = () => {
                         </TableCell>
                         {/* price and delete button */}
                         <TableCell className='flex justify-between flex-col gap-2 items-center'>
-                          <span>${price?.toFixed(2)}</span>
+                          <span>
+                            $
+                            {userExist
+                              ? price?.toFixed(2)
+                              : (price! * quantity!)?.toFixed(2)}
+                          </span>
                           <div
                             className='tooltip tooltip-warning '
                             data-tip='Delete'
@@ -349,6 +357,15 @@ const Cart = () => {
                 })}
               </TableBody>
             </Table>
+            {tempCartData.length > 0 && (
+              <Link
+                to='/payment'
+                className='btn btn-success w-fit m-auto'
+                type='submit'
+              >
+                Checkout
+              </Link>
+            )}
           </SheetHeader>
         </SheetContent>
       </Sheet>

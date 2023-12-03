@@ -27,7 +27,7 @@ const Profile = () => {
                 />
               ) : (
                 <img
-                  className='w-24 h-24 object-cover'
+                  className='w-10 h-10 object-cover'
                   src={`https://eu.ui-avatars.com/api/?name=${name}&size=250`}
                   alt='Generated Avatar'
                 />
