@@ -16,7 +16,7 @@ import { UserCart } from './Cart'
 
 const logOut = async (queryClient: QueryClient, navigate: NavigateFunction) => {
   try {
-    await customFetch.get('auth/logout')
+    await customFetch.post('/auth/logout')
     sessionStorage.clear()
     toast.success('Logged Out Successfully')
     queryClient.invalidateQueries({ queryKey: ['user'] })
